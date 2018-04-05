@@ -18,21 +18,26 @@ public class User {
     })
     private Long id;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "salt")
+    @Column(name = "salt", nullable = false)
     private String salt;
 
-    @Column(name = "privileges")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "privileges", nullable = false)
     private UserPrivileges privileges;
+
+    // Quota in kilobytes
+    @Column(name = "quota")
+    private Long quota;
 }
