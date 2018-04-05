@@ -24,3 +24,9 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+# Out
+out/
+
+# Mac
+.DS_Store
