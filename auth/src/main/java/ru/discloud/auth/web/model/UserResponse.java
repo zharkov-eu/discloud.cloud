@@ -9,7 +9,7 @@ import ru.discloud.auth.domain.User;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-    private Integer id;
+    private Long id;
     private String username;
 
     public UserResponse(User user) {

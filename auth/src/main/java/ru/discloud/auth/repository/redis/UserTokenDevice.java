@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserTokenDevice {
-    private Integer userId;
+    private Long userId;
     private String deviceId;
 }

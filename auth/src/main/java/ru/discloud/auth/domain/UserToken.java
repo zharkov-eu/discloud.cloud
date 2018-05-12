@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class UserToken {
-    private Integer userId;
+    private Long userId;
     private String deviceId;
     private String accessToken;
     private Date accessExpires;

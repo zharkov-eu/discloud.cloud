@@ -23,6 +23,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public UserResponse getUser(@PathVariable Long id) {
+        return new UserResponse(this.userService.findById(id));
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     public UserResponse createUser(@Valid @RequestBody UserRequest userRequest, HttpServletResponse response) throws Exception {

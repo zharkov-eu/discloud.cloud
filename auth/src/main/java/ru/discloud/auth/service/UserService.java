@@ -5,6 +5,9 @@ import ru.discloud.auth.exception.UserCredentialsException;
 import ru.discloud.auth.web.model.UserRequest;
 
 public interface UserService {
+
+    User findById(Long id);
+
     User findByUsername(String username);
 
     User checkCredentials(String username, String password) throws UserCredentialsException;

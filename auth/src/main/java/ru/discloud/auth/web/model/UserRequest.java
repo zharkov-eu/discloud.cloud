@@ -11,7 +11,7 @@ import javax.validation.constraints.Positive;
 public class UserRequest {
     @NotNull(message = "Property 'id' isn't presented")
     @Positive(message = "Property 'id' must be positive value")
-    Integer id;
+    Long id;
 
     @NotEmpty(message = "Property 'username' isn't presented")
     String username;

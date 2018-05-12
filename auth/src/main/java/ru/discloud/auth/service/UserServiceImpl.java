@@ -23,22 +23,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User '{" + id + "}' not found"));
+    }
+
+    @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User with username = " + username + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User with username '{" + username + "}' not found"));
     }
 
     @Override
     public User checkCredentials(String username, String password) throws UserCredentialsException {
         try {
             User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new EntityNotFoundException("User with username = " + username + " not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("User with username '{" + username + "}' not found"));
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             messageDigest.update((password + user.getSalt()).getBytes("UTF-8"));
             return DatatypeConverter.printHexBinary(messageDigest.digest()).equals(user.getPassword()) ? user : null;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new UserCredentialsException();
+            throw new UserCredentialsException("User credentials exception");
         }
     }
 
