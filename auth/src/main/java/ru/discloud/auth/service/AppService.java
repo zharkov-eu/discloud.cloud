@@ -10,4 +10,6 @@ public interface AppService {
     App findByName(String name);
 
     App save(AppRequest appRequest);
+
+    void delete(Integer id);
 }

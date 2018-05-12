@@ -3,6 +3,7 @@ package ru.discloud.auth.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 
@@ -15,7 +16,7 @@ public class App {
     @Column(name = "id")
     @GeneratedValue(generator = "App_Sequence")
     @GenericGenerator(name = "App_Sequence", strategy = "sequence", parameters = {
-            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "app_sequence")
+            @Parameter(name = "sequence_name", value = "app_sequence")
     })
     private Integer id;
 

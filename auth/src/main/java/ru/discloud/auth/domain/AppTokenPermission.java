@@ -4,12 +4,12 @@ public enum AppTokenPermission {
     READONLY("readonly"),
     READWRITE("readwrite");
 
-    private final String text;
+    private final String permission;
 
     AppTokenPermission(final String text) {
-        this.text = text;
+        this.permission = text;
     }
 
     @Override
-    public String toString() { return text; }
+    public String toString() { return permission; }
 }

@@ -1,4 +1,6 @@
 ext {
+    commonsLang3Version = '3.7'
+    jwtVersion = '3.3.0'
     springBootVersion = '2.0.2.RELEASE'
     postgresqlVersion = '42.2.2'
     lombokVersion = '1.16.20'
@@ -9,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    compile("org.apache.commons:commons-lang3:${commonsLang3Version}")
+    compile("com.auth0:java-jwt:${jwtVersion}")
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
