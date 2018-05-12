@@ -31,16 +31,10 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public App findByName(String name) {
-        return appRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("App by name '{" + name + "}' not found"));
-    }
-
-    @Override
     public App save(AppRequest appRequest) {
         App existingApp = appRepository.findByName(appRequest.getName()).orElse(null);
         if (existingApp != null) {
-            throw new EntityExistsException("App with name '{" + appRequest.getName() + "}' not found");
+            throw new EntityExistsException("App with name '{" + appRequest.getName() + "}' already exist");
         }
 
         App app = new App()
