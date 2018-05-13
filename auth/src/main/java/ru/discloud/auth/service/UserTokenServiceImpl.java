@@ -18,6 +18,7 @@ import ru.discloud.auth.web.model.UserTokenRefreshRequest;
 import ru.discloud.auth.web.model.UserTokenRemoveRequest;
 import ru.discloud.auth.web.model.UserTokenRequest;
 
+import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
 
@@ -77,7 +78,12 @@ public class UserTokenServiceImpl implements UserTokenService {
 
     @Override
     public void deleteToken(UserTokenRemoveRequest userTokenRequest) {
-        userTokenRepository.delete(new UserTokenDevice(userTokenRequest.getUserId(), userTokenRequest.getDeviceId()));
+        UserTokenDevice userTokenDevice = new UserTokenDevice(userTokenRequest.getUserId(), userTokenRequest.getDeviceId());
+        String userToken = userTokenRepository.getUserTokenDevice(userTokenDevice);
+        if (userToken == null) {
+            throw new EntityNotFoundException("Token for userId '{" + userTokenDevice.getUserId() + "}' and deviceId '{" + userTokenDevice.getDeviceId() + "}' not found");
+        }
+        userTokenRepository.delete(userTokenDevice);
     }
 
     private UserToken generateToken(User user, String deviceId) {

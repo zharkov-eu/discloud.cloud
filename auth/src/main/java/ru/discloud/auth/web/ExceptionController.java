@@ -1,5 +1,6 @@
 package ru.discloud.auth.web;
 
+import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -31,10 +32,17 @@ public class ExceptionController {
         return new ErrorResponse("EntityExistsException", exception.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(SignatureException.class)
+    public ErrorResponse signature(SignatureException exception) {
+        logger.error("Signature exception: " + exception.getMessage());
+        return new ErrorResponse("SignatureException", exception.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataAccessException.class)
     public ErrorResponse dataAccess(DataAccessException exception) {
-        logger.error("DataAccessException exception: " + exception.getMessage());
+        logger.error("DataAccess exception: " + exception.getMessage());
         return new ErrorResponse("DataAccessException", exception.getMessage());
     }
 

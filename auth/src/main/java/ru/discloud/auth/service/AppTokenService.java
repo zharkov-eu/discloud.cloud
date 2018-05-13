@@ -20,5 +20,5 @@ public interface AppTokenService {
 
     User checkAccessToken(AppTokenRequest appTokenRequest) throws TokenExpiredException, TokenInvalidException;
 
-    void deleteToken(AppTokenRequest appTokenRequest) throws TokenExpiredException, TokenInvalidException;
+    void deleteToken(AppTokenRequest appTokenRequest) throws TokenInvalidException;
 }

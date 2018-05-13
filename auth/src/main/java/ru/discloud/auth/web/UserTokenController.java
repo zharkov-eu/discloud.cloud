@@ -46,6 +46,7 @@ public class UserTokenController {
         return new UserResponse(user);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteToken(@Valid @RequestBody UserTokenRemoveRequest userTokenRequest) {
         userTokenService.deleteToken(userTokenRequest);

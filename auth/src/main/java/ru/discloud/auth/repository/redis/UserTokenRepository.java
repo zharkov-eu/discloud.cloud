@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import ru.discloud.auth.domain.UserToken;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +52,11 @@ public class UserTokenRepository {
         } catch (Exception ex) {
             return Optional.empty();
         }
+    }
+
+    public String getUserTokenDevice(UserTokenDevice userTokenDevice) {
+        String userTokenDeviceMapKey = USER_TOKEN_KEY + "_" + userTokenDevice.getUserId();
+        return (String) redisTemplate.boundHashOps(userTokenDeviceMapKey).get(userTokenDevice.getDeviceId());
     }
 
     public void delete(UserTokenDevice userTokenDevice) {

@@ -48,6 +48,8 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public void delete(Integer id) {
+        appRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("App '{" + id + "}' not found"));
         appRepository.deleteById(id);
     }
 }
