@@ -38,7 +38,7 @@ public class UserTokenRepository {
     public Optional<UserTokenDevice> getAccessToken(String accessToken) {
         String userAccessKey = ACCESS_TOKEN_KEY + "_" + accessToken;
         try {
-            return Optional.of(parseUserTokenDevice(redisTemplate.boundValueOps(userAccessKey).get()));
+            return Optional.of(parseUserDevice(redisTemplate.boundValueOps(userAccessKey).get()));
         } catch (Exception ex) {
             return Optional.empty();
         }
@@ -47,7 +47,7 @@ public class UserTokenRepository {
     public Optional<UserTokenDevice> getRefreshToken(String refreshToken) {
         String userRefreshKey = REFRESH_TOKEN_KEY + "_" + refreshToken;
         try {
-            return Optional.of(parseUserTokenDevice(redisTemplate.boundValueOps(userRefreshKey).get()));
+            return Optional.of(parseUserDevice(redisTemplate.boundValueOps(userRefreshKey).get()));
         } catch (Exception ex) {
             return Optional.empty();
         }
@@ -65,7 +65,7 @@ public class UserTokenRepository {
         redisTemplate.boundHashOps(userTokenDeviceMapKey).delete(userTokenDevice.getDeviceId());
     }
 
-    private UserTokenDevice parseUserTokenDevice(String userDevice) {
+    private UserTokenDevice parseUserDevice(String userDevice) {
         Long userId = Long.parseLong(userDevice.split(DELIMITER)[0]);
         String deviceId = userDevice.split(DELIMITER)[1];
         return new UserTokenDevice(userId, deviceId);

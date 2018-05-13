@@ -23,8 +23,8 @@ import java.util.Date;
 
 @Service
 public class UserTokenServiceImpl implements UserTokenService {
-    private final String ACCESS_TOKEN_KEY = "IHu8HmG8ra";
-    private final String REFRESH_TOKEN_KEY = "FWskhCes6p";
+    private final static String ACCESS_TOKEN_KEY = "IHu8HmG8ra";
+    private final static String REFRESH_TOKEN_KEY = "FWskhCes6p";
 
     private final UserService userService;
     private final UserTokenRepository userTokenRepository;
