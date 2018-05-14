@@ -2,6 +2,7 @@ package ru.discloud.user.domain;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ public class Client {
     @Column(name = "id")
     @GeneratedValue(generator = "Client_Sequence")
     @GenericGenerator(name = "Client_Sequence", strategy = "sequence", parameters = {
-            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "client_sequence")
+            @Parameter(name = "sequence_name", value = "client_sequence")
     })
     private Long id;
 
@@ -31,8 +32,8 @@ public class Client {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "country")
-    private String country;
+    @ManyToOne(targetEntity = Country.class, cascade = CascadeType.PERSIST)
+    private Country country;
 
     @Column(name = "state")
     private String state;
