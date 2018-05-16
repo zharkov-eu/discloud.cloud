@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.discloud.shared.ReverseLookupEnum;
+import ru.discloud.shared.UserPrivileges;
 import ru.discloud.user.domain.User;
-import ru.discloud.user.domain.UserPrivileges;
 import ru.discloud.user.repository.UserRepository;
 import ru.discloud.user.web.model.UserRequest;
 

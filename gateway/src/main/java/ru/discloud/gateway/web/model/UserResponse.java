@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.discloud.gateway.domain.User;
-import ru.discloud.user.domain.UserPrivileges;
+import ru.discloud.shared.UserPrivileges;
 
 @Data
 @NoArgsConstructor

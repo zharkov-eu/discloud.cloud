@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
+import ru.discloud.shared.UserPrivileges;
 
 import javax.persistence.*;
 

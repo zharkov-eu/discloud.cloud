@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.discloud.shared.auth.AuthClientNotFoundException;
+import ru.discloud.shared.auth.TokenInvalidException;
 import ru.discloud.user.web.model.ErrorResponse;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,14 +20,28 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
     public ErrorResponse notFound(EntityNotFoundException exception) {
-        logger.error("Entity Not Found exception:" + exception.getMessage());
+        logger.error("EntityNotFound:" + exception.getMessage());
         return new ErrorResponse("EntityNotFound", exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthClientNotFoundException.class)
+    public ErrorResponse tokenInvalid(AuthClientNotFoundException exception) {
+        logger.error("AuthClientNotFoundException:" + exception.getMessage());
+        return new ErrorResponse("AuthClientNotFoundException", exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(TokenInvalidException.class)
+    public ErrorResponse tokenInvalid(TokenInvalidException exception) {
+        logger.error("TokenInvalidException:" + exception.getMessage());
+        return new ErrorResponse("TokenInvalidException", exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataAccessException.class)
     public ErrorResponse dataAccess(DataAccessException exception) {
-        logger.error("DataAccessException exception: " + exception.getMessage());
+        logger.error("DataAccessException: " + exception.getMessage());
         return new ErrorResponse("DataAccess", exception.getMessage());
     }
 }

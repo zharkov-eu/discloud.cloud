@@ -1,4 +1,6 @@
 ext {
+    jjwtVersion = '0.9.0'
+    lombokVersion = '1.16.20'
     hibernateValidatorVersion = '6.0.9.Final'
 }
 
@@ -7,5 +9,8 @@ repositories {
 }
 
 dependencies {
+    compile("io.jsonwebtoken:jjwt:${jjwtVersion}")
     compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
+
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 }

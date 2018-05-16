@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import ru.discloud.gateway.config.EndpointConfig;
 import ru.discloud.gateway.web.model.UserRequest;
 import ru.discloud.gateway.domain.User;
-import ru.discloud.user.domain.UserPrivileges;
+import ru.discloud.shared.UserPrivileges;
 
 import javax.xml.bind.ValidationException;
 import java.io.IOException;

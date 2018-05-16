@@ -2,7 +2,7 @@ package ru.discloud.gateway.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.discloud.user.domain.UserPrivileges;
+import ru.discloud.shared.UserPrivileges;
 
 @Data
 @Accessors(chain = true)

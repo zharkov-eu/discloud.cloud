@@ -1,4 +1,4 @@
-package ru.discloud.user.domain;
+package ru.discloud.shared;
 
 public enum UserPrivileges {
     ADMIN("admin"),

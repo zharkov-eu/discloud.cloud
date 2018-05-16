@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Accessors(chain = true)
-public class UserRequest {
+public class UserRequest implements ru.discloud.shared.web.User.UserRequest {
     @Email(message = "Provided email isn't valid")
     private String email;
 
