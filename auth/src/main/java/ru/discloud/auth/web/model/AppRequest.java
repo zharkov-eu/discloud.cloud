@@ -1,7 +1,7 @@
 package ru.discloud.auth.web.model;
 
 import lombok.Data;
-import ru.discloud.auth.lib.MemberOf;
+import ru.discloud.shared.MemberOf;
 
 import javax.validation.constraints.NotEmpty;
 

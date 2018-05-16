@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.discloud.auth.domain.App;
 import ru.discloud.auth.domain.AppTokenPermission;
 import ru.discloud.auth.domain.AppTokenType;
-import ru.discloud.auth.lib.ReverseLookupEnum;
 import ru.discloud.auth.repository.jpa.AppRepository;
 import ru.discloud.auth.web.model.AppRequest;
+import ru.discloud.shared.ReverseLookupEnum;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;

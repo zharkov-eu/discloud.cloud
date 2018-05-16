@@ -1,4 +1,4 @@
-package ru.discloud.auth.lib;
+package ru.discloud.shared;
 
 import java.util.HashMap;
 import java.util.Map;

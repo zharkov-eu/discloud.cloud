@@ -10,6 +10,9 @@ repositories {
     mavenCentral()
 }
 
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
 dependencies {
     compile("org.apache.commons:commons-lang3:${commonsLang3Version}")
     compile("io.jsonwebtoken:jjwt:${jjwtVersion}")

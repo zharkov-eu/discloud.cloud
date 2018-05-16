@@ -8,9 +8,12 @@ repositories {
     mavenCentral()
 }
 
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
 dependencies {
     compile("org.asynchttpclient:async-http-client:${asyncHttpClientVersion}")
-    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}")
 
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 

@@ -1,0 +1,11 @@
+ext {
+    hibernateValidatorVersion = '6.0.9.Final'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
+}

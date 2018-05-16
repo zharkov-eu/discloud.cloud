@@ -16,10 +16,35 @@ buildscript {
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'idea'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
 
 	group = 'ru.discloud'
 	version = '0.0.1-SNAPSHOT'
 	sourceCompatibility = 1.8
+}
+
+project(':auth') {
+    dependencies {
+        compile project(':shared')
+    }
+}
+
+project(':statistics') {
+    dependencies {
+        compile project(':shared')
+    }
+}
+
+project(':user') {
+    dependencies {
+        compile project(':shared')
+    }
+}
+
+project(':gateway') {
+    dependencies {
+        compile project(':shared')
+        compile project(':auth')
+        compile project(':statistics')
+        compile project(':user')
+    }
 }

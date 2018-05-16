@@ -1,4 +1,4 @@
-package ru.discloud.auth.lib;
+package ru.discloud.shared;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

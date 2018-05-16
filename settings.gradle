@@ -1,1 +1,1 @@
-include 'auth', 'gateway', 'statistics', 'user'
+include 'shared', 'auth', 'gateway', 'statistics', 'user'

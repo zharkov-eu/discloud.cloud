@@ -1,12 +1,14 @@
 package ru.discloud.user.web.model;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
+@Accessors(chain = true)
 public class UserRequest {
     @Email(message = "Provided email isn't valid")
     private String email;
@@ -15,7 +17,4 @@ public class UserRequest {
     private String phone;
 
     private String username;
-
-    @Size(min = 8, message = "Provided password length less than 8 symbols")
-    private String password;
 }

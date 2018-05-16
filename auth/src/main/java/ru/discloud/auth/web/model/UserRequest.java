@@ -1,6 +1,7 @@
 package ru.discloud.auth.web.model;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Data
+@Accessors(chain = true)
 public class UserRequest {
     @NotNull(message = "Property 'id' isn't presented")
     @Positive(message = "Property 'id' must be positive value")
