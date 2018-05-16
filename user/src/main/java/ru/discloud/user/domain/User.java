@@ -1,6 +1,7 @@
 package ru.discloud.user.domain;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "user")
+@Accessors(chain = true)
 public class User {
     @Id
     @Column(name = "id")
@@ -24,6 +26,7 @@ public class User {
     @Column(name = "phone", unique = true)
     private String phone;
 
+    // Username may be email or phone
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 

@@ -52,9 +52,9 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     public UserResponse save(@Valid @RequestBody UserRequest userRequest, HttpServletResponse response) {
-        Long id = userService.save(userRequest);
-        response.addHeader(HttpHeaders.LOCATION, "/user/" + id);
-        return new UserResponse(id);
+        User user = userService.save(userRequest);
+        response.addHeader(HttpHeaders.LOCATION, "/user/" + user.getId());
+        return new UserResponse(user);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)

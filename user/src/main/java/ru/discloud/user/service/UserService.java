@@ -17,7 +17,7 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    Long save(UserRequest userRequest);
+    User save(UserRequest userRequest);
 
     User update(Long id, UserRequest userRequest);
 

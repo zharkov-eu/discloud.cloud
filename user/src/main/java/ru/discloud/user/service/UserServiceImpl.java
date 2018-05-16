@@ -4,16 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.discloud.shared.ReverseLookupEnum;
 import ru.discloud.user.domain.User;
+import ru.discloud.user.domain.UserPrivileges;
 import ru.discloud.user.repository.UserRepository;
 import ru.discloud.user.web.model.UserRequest;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
+    private final ReverseLookupEnum<UserPrivileges> userPrivileges = new ReverseLookupEnum<>(UserPrivileges.class);
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -50,8 +53,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long save(UserRequest userRequest) {
-        return null;
+    public User save(UserRequest userRequest) {
+        User existingUser = userRepository.findByUsername(userRequest.getUsername()).orElse(null);
+        if (existingUser != null) {
+            throw new EntityExistsException("User with username '{" + userRequest.getUsername() + "}' already exist");
+        }
+
+        User user = new User()
+                .setUsername(userRequest.getUsername())
+                .setEmail(userRequest.getEmail())
+                .setPhone(userRequest.getPhone())
+                .setPrivileges(userPrivileges.get(userRequest.getUserPrivileges()))
+                .setQuota(userRequest.getQuota());
+
+        return userRepository.save(user);
     }
 
     @Override

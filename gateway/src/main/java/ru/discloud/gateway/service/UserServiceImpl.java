@@ -3,6 +3,7 @@ package ru.discloud.gateway.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.asynchttpclient.*;
 import org.asynchttpclient.util.HttpConstants;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -52,8 +53,25 @@ public class UserServiceImpl implements UserService {
                 .setPrivileges(UserPrivileges.USER)
                 .setQuota(1024 * 1024L);
 
+        ru.discloud.user.web.model.UserRequest userUserRequest = new ru.discloud.user.web.model.UserRequest()
+                .setUsername(user.getUsername())
+                .setEmail(user.getEmail())
+                .setPhone(user.getPhone())
+                .setUserPrivileges(user.getPrivileges().toString())
+                .setQuota(user.getQuota());
+        Request createUserUserService = new RequestBuilder(HttpConstants.Methods.POST)
+                .setUrl(authService.getBaseUrl() + "/api/user/user")
+                .setBody(mapper.writeValueAsString(userUserRequest))
+                .build();
+        Future<Response> userUserService = httpClient.executeRequest(createUserUserService);
+        if (userUserService.get().getStatusCode() == HttpStatus.CREATED.value()) {
+            ru.discloud.user.web.model.UserResponse userUserResponse = mapper.readValue(
+                    userUserService.get().getResponseBody(), ru.discloud.user.web.model.UserResponse.class);
+            user.setId(userUserResponse.getId());
+        }
+
         ru.discloud.auth.web.model.UserRequest authUserRequest = new ru.discloud.auth.web.model.UserRequest()
-                .setId(1L)
+                .setId(user.getId())
                 .setUsername(user.getUsername())
                 .setPassword(user.getPassword());
         Request createUserAuthService = new RequestBuilder(HttpConstants.Methods.POST)
