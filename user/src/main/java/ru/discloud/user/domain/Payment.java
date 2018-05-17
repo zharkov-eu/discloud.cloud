@@ -19,11 +19,11 @@ public class Payment {
     })
     private Long id;
 
-    @Column(name = "date", nullable = false)
-    private Date date;
-
-    @Column(name = "payment_system_id")
+    @Column(name = "payment_system_id", nullable = false)
     private String paymentSystemId;
+
+    @Column(name="idempotence_key", nullable = false)
+    private String idempotenceKey;
 
     @ManyToOne(targetEntity = Client.class, optional = false)
     private Client client;
@@ -34,4 +34,10 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     @Column(name = "currency", nullable = false)
     private Currency currency;
+
+    @Column(name="paid", nullable = false)
+    private Boolean paid;
+
+    @Column(name = "date", nullable = false)
+    private Date date;
 }

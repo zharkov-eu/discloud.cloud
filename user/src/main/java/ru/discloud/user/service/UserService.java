@@ -1,5 +1,6 @@
 package ru.discloud.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.discloud.user.domain.User;
@@ -16,7 +17,7 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    User save(UserRequest userRequest);
+    User save(UserRequest userRequest) throws JsonProcessingException;
 
     User update(Long id, UserRequest userRequest);
 

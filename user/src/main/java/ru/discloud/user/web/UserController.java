@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.discloud.user.domain.User;
+import ru.discloud.user.integration.mailgun.MailClient;
 import ru.discloud.user.service.UserService;
 import ru.discloud.user.web.model.UserRequest;
 import ru.discloud.user.web.model.UserResponse;
@@ -20,10 +21,12 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final MailClient mailClient;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MailClient mailClient) {
         this.userService = userService;
+        this.mailClient = mailClient;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -51,7 +54,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    public UserResponse save(@Valid @RequestBody UserRequest userRequest, HttpServletResponse response) {
+    public UserResponse save(@Valid @RequestBody UserRequest userRequest, HttpServletResponse response) throws Exception {
         User user = userService.save(userRequest);
         response.addHeader(HttpHeaders.LOCATION, "/user/" + user.getId());
         return new UserResponse(user);

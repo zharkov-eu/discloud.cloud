@@ -27,7 +27,6 @@ public class User {
     @Column(name = "phone", unique = true)
     private String phone;
 
-    // Username may be email or phone
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -38,4 +37,7 @@ public class User {
     // Quota in kilobytes
     @Column(name = "quota")
     private Long quota;
+
+    @Column(name = "signup_message")
+    private String signupMessage;
 }

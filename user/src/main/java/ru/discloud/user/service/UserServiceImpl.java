@@ -1,5 +1,6 @@
 package ru.discloud.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,20 +8,28 @@ import org.springframework.stereotype.Service;
 import ru.discloud.shared.ReverseLookupEnum;
 import ru.discloud.shared.UserPrivileges;
 import ru.discloud.user.domain.User;
+import ru.discloud.user.integration.mailgun.MailClient;
+import ru.discloud.user.mail.UserSignupMessage;
 import ru.discloud.user.repository.UserRepository;
 import ru.discloud.user.web.model.UserRequest;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final MailClient mailClient;
     private final ReverseLookupEnum<UserPrivileges> userPrivileges = new ReverseLookupEnum<>(UserPrivileges.class);
+    private final ExecutorService executor;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, MailClient mailClient) {
+        this.executor = Executors.newFixedThreadPool(1);
         this.userRepository = userRepository;
+        this.mailClient = mailClient;
     }
 
     @Override
@@ -66,7 +75,24 @@ public class UserServiceImpl implements UserService {
                 .setPrivileges(userPrivileges.get(userRequest.getUserPrivileges()))
                 .setQuota(userRequest.getQuota());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        if (user.getEmail() != null) {
+            this.executor.execute(() -> {
+                UserSignupMessage message = new UserSignupMessage(user.getEmail());
+                try {
+                    mailClient.sendMessage(message).thenAccept(sendMessageResponse -> {
+                        if (sendMessageResponse == null) return;
+                        savedUser.setSignupMessage(sendMessageResponse.getId());
+                        userRepository.save(savedUser);
+                    }).join();
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        return savedUser;
     }
 
     @Override
