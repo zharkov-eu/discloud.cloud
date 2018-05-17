@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user/user/")
 public class UserController {
 
     private final UserService userService;

@@ -1,4 +1,4 @@
-package ru.discloud.statistics.configuration;
+package ru.discloud.statistics.config;
 
 import org.influxdb.dto.Point;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

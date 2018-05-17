@@ -1,6 +1,7 @@
 package ru.discloud.user.domain;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "client")
+@Accessors(chain = true)
 public class Client {
     @Id
     @Column(name = "id")

@@ -6,7 +6,6 @@ import ru.discloud.user.domain.User;
 import ru.discloud.user.web.model.UserRequest;
 
 public interface UserService {
-
     Page<User> findAll(Pageable pageable);
 
     User findById(Long id);

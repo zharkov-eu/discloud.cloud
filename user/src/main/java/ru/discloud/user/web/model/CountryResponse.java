@@ -9,13 +9,13 @@ import ru.discloud.user.domain.Country;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CountryResponse {
-    private String Key;
-    private String Name;
-    private String Flag;
+    private String key;
+    private String name;
+    private String flag;
 
     public CountryResponse(Country country) {
-        this.Key = country.getKey();
-        this.Name = country.getName();
-        this.Flag = country.getFlag();
+        this.key = country.getKey();
+        this.name = country.getName();
+        this.flag = country.getFlag();
     }
 }

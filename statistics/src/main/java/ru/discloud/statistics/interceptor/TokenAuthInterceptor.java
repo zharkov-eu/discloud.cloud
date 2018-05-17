@@ -1,4 +1,4 @@
-package ru.discloud.user.interceptor;
+package ru.discloud.statistics.interceptor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import ru.discloud.shared.auth.AuthInterceptor;
 import ru.discloud.shared.auth.AuthToken;
-import ru.discloud.user.UserApplication;
+import ru.discloud.statistics.StatisticsApplication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class TokenAuthInterceptor extends HandlerInterceptorAdapter {
 
     public TokenAuthInterceptor() throws Exception {
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = documentBuilder.parse(UserApplication.class.getClassLoader().getResourceAsStream("auth.xml"));
+        Document document = documentBuilder.parse(StatisticsApplication.class.getClassLoader().getResourceAsStream("auth.xml"));
         NodeList nodeList = document.getElementsByTagName("client");
         Stream<Element> nodeStream = IntStream.range(0, nodeList.getLength()).mapToObj(index -> (Element) nodeList.item(index));
         List<TokenAuthClient> clients = nodeStream

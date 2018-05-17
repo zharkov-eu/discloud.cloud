@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @Entity
@@ -17,6 +18,12 @@ public class Payment {
             @org.hibernate.annotations.Parameter(name = "sequence_name", value = "payment_sequence")
     })
     private Long id;
+
+    @Column(name = "date", nullable = false)
+    private Date date;
+
+    @Column(name = "payment_system_id")
+    private String paymentSystemId;
 
     @ManyToOne(targetEntity = Client.class, optional = false)
     private Client client;

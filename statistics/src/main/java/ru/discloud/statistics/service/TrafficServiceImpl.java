@@ -19,7 +19,7 @@ public class TrafficServiceImpl implements TrafficService {
     }
 
     @Override
-    public Traffic save(TrafficRequest trafficRequest) {
+    public void save(TrafficRequest trafficRequest) {
         Traffic traffic = new Traffic()
                 .setServiceUuid(trafficRequest.getServiceUuid())
                 .setIncome(trafficRequest.getIncome())
@@ -31,6 +31,5 @@ public class TrafficServiceImpl implements TrafficService {
                 .addField("outcome", traffic.getOutcome())
                 .build();
         influxDBRepository.write(point);
-        return traffic;
     }
 }
