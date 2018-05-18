@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
                 .setPrivileges(UserPrivileges.USER)
                 .setQuota(1024 * 1024L);
 
-        ru.discloud.user.web.model.UserRequest userUserRequest = new ru.discloud.user.web.model.UserRequest()
+        ru.discloud.shared.web.user.UserRequest userUserRequest = new ru.discloud.user.web.model.UserRequest()
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
                 .setPhone(user.getPhone())

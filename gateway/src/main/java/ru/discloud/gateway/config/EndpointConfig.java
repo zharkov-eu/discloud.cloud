@@ -14,6 +14,8 @@ public class EndpointConfig {
     private String protocol;
     private String location;
     private Integer port;
+    private String user;
+    private String password;
 
     public EndpointConfig(String serviceName) throws IOException {
         try {
@@ -30,6 +32,8 @@ public class EndpointConfig {
             this.protocol = prop.getProperty(propertyBase + ".protocol") != null ? prop.getProperty(propertyBase + ".protocol") : "http";
             this.location = prop.getProperty(propertyBase + ".location") != null ? prop.getProperty(propertyBase + ".location") : "localhost";
             this.port = prop.getProperty(propertyBase + ".port") != null ? Integer.parseInt(prop.getProperty(propertyBase + ".port")) : 80;
+            this.user = prop.getProperty(propertyBase + ".user");
+            this.password = prop.getProperty(propertyBase + ".password");
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         } finally {

@@ -1,6 +1,7 @@
 package ru.discloud.user.web.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import ru.discloud.shared.MemberOf;
 
@@ -10,7 +11,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Accessors(chain = true)
-public class UserRequest implements ru.discloud.shared.web.User.UserRequest {
+@EqualsAndHashCode(callSuper = false)
+public class UserRequest extends ru.discloud.shared.web.user.UserRequest {
     @Email(message = "Provided email isn't valid")
     private String email;
 

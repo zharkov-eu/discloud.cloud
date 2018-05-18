@@ -43,7 +43,7 @@ public class UserTokenServiceImpl implements UserTokenService {
             UserToken userToken = generateToken(user, userTokenInitialRequest.getDeviceId());
             return userTokenRepository.save(userToken);
         } else {
-            throw new UserCredentialsException("User credentials not valid");
+            throw new UserCredentialsException("user credentials not valid");
         }
     }
 

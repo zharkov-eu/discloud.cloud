@@ -48,7 +48,7 @@ public class UserController {
         if (username != null) user = userService.findByUsername(username);
         if (email != null) user = userService.findByEmail(email);
         if (phone != null) user = userService.findByPhone(phone);
-        if (user == null) throw new EntityNotFoundException("User not found");
+        if (user == null) throw new EntityNotFoundException("user not found");
         return new UserResponse(user);
     }
 

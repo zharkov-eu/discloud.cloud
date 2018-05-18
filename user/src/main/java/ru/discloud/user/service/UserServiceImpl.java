@@ -40,32 +40,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) throws EntityNotFoundException {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User '{" + id + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user '{" + id + "}' not found"));
     }
 
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User by email '{" + email + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user by email '{" + email + "}' not found"));
     }
 
     @Override
     public User findByPhone(String phone) {
         return userRepository.findByPhone(phone)
-                .orElseThrow(() -> new EntityNotFoundException("User by phone '{" + phone + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user by phone '{" + phone + "}' not found"));
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User by username '{" + username + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user by username '{" + username + "}' not found"));
     }
 
     @Override
     public User save(UserRequest userRequest) {
         User existingUser = userRepository.findByUsername(userRequest.getUsername()).orElse(null);
         if (existingUser != null) {
-            throw new EntityExistsException("User with username '{" + userRequest.getUsername() + "}' already exist");
+            throw new EntityExistsException("user with username '{" + userRequest.getUsername() + "}' already exist");
         }
 
         User user = new User()

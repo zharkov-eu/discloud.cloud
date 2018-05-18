@@ -1,4 +1,4 @@
-package ru.discloud.shared.web.User;
+package ru.discloud.shared.web.user;
 
 public interface UserResponse {
     String getEmail(String email);

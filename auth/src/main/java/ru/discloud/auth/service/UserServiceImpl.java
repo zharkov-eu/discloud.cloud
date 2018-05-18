@@ -25,26 +25,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User '{" + id + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user '{" + id + "}' not found"));
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User with username '{" + username + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user with username '{" + username + "}' not found"));
     }
 
     @Override
     public User checkCredentials(String username, String password) throws UserCredentialsException {
         try {
             User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new EntityNotFoundException("User with username '{" + username + "}' not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("user with username '{" + username + "}' not found"));
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             messageDigest.update((password + user.getSalt()).getBytes("UTF-8"));
             return DatatypeConverter.printHexBinary(messageDigest.digest()).equals(user.getPassword()) ? user : null;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new UserCredentialsException("User credentials exception");
+            throw new UserCredentialsException("user credentials exception");
         }
     }
 
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public User save(UserRequest userRequest) throws Exception {
         User existingUser = userRepository.findByUsername(userRequest.getUsername()).orElse(null);
         if (existingUser != null) {
-            throw new EntityExistsException("User with username '{" + userRequest.getUsername() + "}' already exist");
+            throw new EntityExistsException("user with username '{" + userRequest.getUsername() + "}' already exist");
         }
 
         String salt = RandomStringUtils.randomAlphanumeric(10);
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User '{" + id + "}' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("user '{" + id + "}' not found"));
         userRepository.deleteById(id);
     }
 }
