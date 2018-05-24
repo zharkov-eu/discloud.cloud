@@ -1,5 +1,7 @@
 package ru.discloud.shared;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum UserPrivileges {
     ADMIN("admin"),
     USER("user");
@@ -11,6 +13,7 @@ public enum UserPrivileges {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return text;
     }

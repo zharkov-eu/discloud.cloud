@@ -1,16 +1,13 @@
 package ru.discloud.gateway.request;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.asynchttpclient.*;
 import org.springframework.stereotype.Component;
 import ru.discloud.gateway.config.EndpointConfig;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -20,10 +17,9 @@ public class AuthServiceRequest {
     private final EndpointConfig authService = new EndpointConfig("auth");
     private final EndpointConfig statisticsService = new EndpointConfig("statistics");
     private final EndpointConfig userService = new EndpointConfig("user");
-    private final ObjectMapper mapper = new ObjectMapper();
     private final AsyncHttpClient httpClient;
 
-    private Map<ServiceEnum, String> serviceTokens;
+    private Map<ServiceEnum, Token> serviceTokens;
 
     public AuthServiceRequest() throws IOException {
         DefaultAsyncHttpClientConfig.Builder clientBuilder = Dsl.config()
@@ -32,32 +28,62 @@ public class AuthServiceRequest {
         this.serviceTokens = new HashMap<>();
     }
 
+    public CompletableFuture<Response> request(ServiceEnum service, String method, String path) {
+        RequestBuilder requestBuilder = new RequestBuilder(method);
+        return executeRequest(service, requestBuilder, path);
+    }
+
     public CompletableFuture<Response> request(ServiceEnum service, String method, String path,
-                                               Map<String, List<String>> queryParams, String body) throws Exception {
-        String url = getUrl(service, path);
-        String basicAuthCredentials = getBasicAuthCredentials(service);
-        RequestBuilder requestBuilder = new RequestBuilder(method)
-                .setUrl(url)
-                .setHeader("Authorization", "Bearer " + serviceTokens.get(service))
-                .setHeader("Content-Type", "application/json");
+                                               Map<String, List<String>> queryParams) {
+        RequestBuilder requestBuilder = new RequestBuilder(method);
+        if (queryParams != null) requestBuilder.setQueryParams(queryParams);
+        return executeRequest(service, requestBuilder, path);
+    }
+
+    public CompletableFuture<Response> request(ServiceEnum service, String method, String path,
+                                               Map<String, List<String>> queryParams, String body) {
+        RequestBuilder requestBuilder = new RequestBuilder(method);
         if (queryParams != null) requestBuilder.setQueryParams(queryParams);
         if (body != null) requestBuilder.setBody(body);
-        Request request = requestBuilder.build();
+        return executeRequest(service, requestBuilder, path);
+    }
+
+    private CompletableFuture<Response> executeRequest(ServiceEnum service,
+                                                       RequestBuilder requestBuilder, String path) {
+        String url = getUrl(service, path);
+
+        String authorizationHeader;
+        Token token = serviceTokens.get(service);
+        if (token != null && new Date().before(token.expired)) {
+            authorizationHeader = "Bearer " + token.value;
+        } else {
+            authorizationHeader = "Basic " + getBasicAuthCredentials(service);
+        }
+
+        requestBuilder.setUrl(url)
+                .setHeader("Authorization", authorizationHeader)
+                .setHeader("Content-Type", "application/json");
+
         return httpClient.executeRequest(requestBuilder).toCompletableFuture()
-                .thenApply(response -> {
-                    if (response.getStatusCode() == 401) {
-                        requestBuilder.setHeader("Authorization", basicAuthCredentials);
+                .thenCompose((response) -> {
+                    if (response.getStatusCode() == 407) {
+                        requestBuilder.setHeader("Authorization", "Basic " + getBasicAuthCredentials(service));
                         return httpClient.executeRequest(requestBuilder).toCompletableFuture()
                                 .thenApply(authResponse -> {
-                                    serviceTokens.put(service, authResponse.getHeader("Auth-Token"));
+                                    if (authResponse.getStatusCode() == 407) {
+                                        throw new ServiceCredentialsException(
+                                                String.format("Service %s not found", service.toString()));
+                                    }
+                                    String tokenString = authResponse.getHeader("X-Auth-Token");
+                                    long tokenExpireInterval = Long.parseLong(authResponse.getHeader("X-Auth-Token"));
+                                    Date tokenExpire = new Date(new Date().getTime() + tokenExpireInterval);
+                                    serviceTokens.put(service, new Token(tokenString, tokenExpire));
+
                                     return authResponse;
-                                }).join();
+                                });
                     } else {
-                        return response;
+                        return CompletableFuture.supplyAsync(() -> response);
                     }
-                }).handle((response, ex) -> {
-                    ex.printStackTrace();
-                    return response;
                 });
     }
 
@@ -70,7 +96,7 @@ public class AuthServiceRequest {
             case USER:
                 return userService.getBaseUrl().concat(path);
             default:
-                throw new ServiceNotFoundException("Service not found");
+                throw new ServiceNotFoundException(String.format("Service %s not found", service.toString()));
         }
     }
 
@@ -87,8 +113,14 @@ public class AuthServiceRequest {
                 credentials = userService.getUser() + ":" + userService.getPassword();
                 break;
             default:
-                throw new ServiceNotFoundException("Service not found");
+                throw new ServiceNotFoundException(String.format("Service %s not found", service.toString()));
         }
         return Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
     }
+}
+
+@AllArgsConstructor
+class Token {
+    public String value;
+    public Date expired;
 }

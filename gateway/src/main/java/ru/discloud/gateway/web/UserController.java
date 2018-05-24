@@ -2,10 +2,12 @@ package ru.discloud.gateway.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.discloud.gateway.service.UserService;
+import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserResponse;
 
 @RestController
@@ -19,7 +21,12 @@ public class UserController {
     }
 
     @GetMapping(path = "/")
-    public Flux<UserResponse> getUsers() {
-        return userService.getUsers().map(UserResponse::new);
+    public Mono<UserPageResponse> getUsers() throws Exception {
+        return userService.getUsers();
+    }
+
+    @GetMapping(path = "/{id}")
+    public Mono<UserResponse> getUser(@PathVariable Long id) throws Exception {
+        return userService.getUserById(id).map(UserResponse::new);
     }
 }

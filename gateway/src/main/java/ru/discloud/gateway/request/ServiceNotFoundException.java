@@ -1,7 +1,7 @@
 package ru.discloud.gateway.request;
 
-public class ServiceNotFoundException extends Exception {
-    public ServiceNotFoundException(String message) {
+class ServiceNotFoundException extends RuntimeException {
+    ServiceNotFoundException(String message) {
         super(message);
     }
 }
