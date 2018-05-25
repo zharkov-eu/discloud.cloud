@@ -1,10 +1,12 @@
 package ru.discloud.gateway.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.asynchttpclient.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import ru.discloud.gateway.domain.User;
+import ru.discloud.gateway.exception.ServiceResponseException;
 import ru.discloud.gateway.request.service.AuthRequestService;
 import ru.discloud.gateway.request.service.ServiceEnum;
 import ru.discloud.gateway.web.model.UserPageResponse;
@@ -13,6 +15,10 @@ import ru.discloud.gateway.web.model.UserRequest;
 import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,19 +47,19 @@ public class UserServiceImpl implements UserService {
   public Mono<User> getUserById(Long id) {
     return Mono.fromFuture(
         authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/" + id)
-    ).map(response -> {
-      if (response.getStatusCode() == 404) throw new EntityNotFoundException("");
-      try {
-        return mapper.readValue(response.getResponseBody(), User.class);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    });
+    ).map(this::mapResponseToUser);
   }
 
   @Override
-  public Mono<User> getUserByUsername(String username) {
-    return null;
+  public Mono<User> getUserBy(String username, String email, String phone) {
+    Map<String, List<String>> query = new HashMap<>();
+    if (username != null) query.put("username", Collections.singletonList(username));
+    if (email != null) query.put("email", Collections.singletonList(email));
+    if (phone != null) query.put("phone", Collections.singletonList(phone));
+
+    return Mono.fromFuture(
+        authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/by/", query)
+    ).map(this::mapResponseToUser);
   }
 
   @Override
@@ -97,5 +103,24 @@ public class UserServiceImpl implements UserService {
 //        Future<Response> userAuthService = httpClient.executeRequest(createUserAuthService);
 
     return null;
+  }
+
+  private User mapResponseToUser(Response response) {
+    switch (response.getStatusCode()) {
+      case 200:
+        try {
+          return mapper.readValue(response.getResponseBody(), User.class);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      case 404:
+        throw new EntityNotFoundException("User not found");
+      default:
+        throw new ServiceResponseException(
+            String.format("Service %s bad response: code = %s, response = %s", ServiceEnum.USER, response.getStatusCode(), response.getResponseBody()),
+            response.getStatusCode(),
+            response.getResponseBody()
+        );
+    }
   }
 }

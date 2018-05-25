@@ -6,11 +6,11 @@ import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
 
 public interface UserService {
-  Mono<UserPageResponse> getUsers() throws Exception;
+  Mono<UserPageResponse> getUsers();
 
   Mono<User> getUserById(Long id);
 
-  Mono<User> getUserByUsername(String username);
+  Mono<User> getUserBy(String username, String email, String phone);
 
   Mono<User> createUser(UserRequest userRequest) throws Exception;
 }
