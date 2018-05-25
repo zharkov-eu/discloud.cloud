@@ -13,12 +13,12 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPageResponse extends PageImpl<User> {
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public UserPageResponse(@JsonProperty("content") List<User> content,
-                            @JsonProperty("pageable") Map<String, Object> pageable,
-                            @JsonProperty("number") int number,
-                            @JsonProperty("size") int size,
-                            @JsonProperty("totalElements") Long totalElements) {
-        super(content, PageRequest.of(number, size), totalElements);
-    }
+  @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+  public UserPageResponse(@JsonProperty("content") List<User> content,
+                          @JsonProperty("pageable") Map<String, Object> pageable,
+                          @JsonProperty("number") int number,
+                          @JsonProperty("size") int size,
+                          @JsonProperty("totalElements") Long totalElements) {
+    super(content, PageRequest.of(number, size), totalElements);
+  }
 }

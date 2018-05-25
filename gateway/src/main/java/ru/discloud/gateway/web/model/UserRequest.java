@@ -8,14 +8,14 @@ import javax.validation.constraints.Size;
 
 @Data
 public class UserRequest {
-    @Email(message = "Provided email isn't valid")
-    private String email;
+  @Email(message = "Provided email isn't valid")
+  private String email;
 
-    @NotEmpty(message = "Phone not provided")
-    private String phone;
+  @NotEmpty(message = "Phone not provided")
+  private String phone;
 
-    private String username;
+  private String username;
 
-    @Size(min = 8, message = "Provided password length less than 8 symbols")
-    private String password;
+  @Size(min = 8, message = "Provided password length less than 8 symbols")
+  private String password;
 }

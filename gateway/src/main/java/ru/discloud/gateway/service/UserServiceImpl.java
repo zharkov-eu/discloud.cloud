@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import ru.discloud.gateway.request.AuthServiceRequest;
-import ru.discloud.gateway.request.ServiceEnum;
+import ru.discloud.gateway.domain.User;
+import ru.discloud.gateway.request.service.AuthRequestService;
+import ru.discloud.gateway.request.service.ServiceEnum;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
-import ru.discloud.gateway.domain.User;
 
 import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.ValidationException;
@@ -16,51 +16,51 @@ import java.io.IOException;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final ObjectMapper mapper = new ObjectMapper();
-    private AuthServiceRequest authRequest;
+  private final ObjectMapper mapper = new ObjectMapper();
+  private AuthRequestService authRequest;
 
-    @Autowired
-    public UserServiceImpl(AuthServiceRequest authRequest) throws IOException {
-        this.authRequest = authRequest;
+  @Autowired
+  public UserServiceImpl(AuthRequestService authRequest) throws IOException {
+    this.authRequest = authRequest;
+  }
+
+  @Override
+  public Mono<UserPageResponse> getUsers() {
+    return Mono.fromFuture(
+        authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/")
+    ).map(response -> {
+      try {
+        return mapper.readValue(response.getResponseBody(), UserPageResponse.class);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
+  }
+
+  @Override
+  public Mono<User> getUserById(Long id) {
+    return Mono.fromFuture(
+        authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/" + id)
+    ).map(response -> {
+      if (response.getStatusCode() == 404) throw new EntityNotFoundException("");
+      try {
+        return mapper.readValue(response.getResponseBody(), User.class);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
+  }
+
+  @Override
+  public Mono<User> getUserByUsername(String username) {
+    return null;
+  }
+
+  @Override
+  public Mono<User> createUser(UserRequest userRequest) throws Exception {
+    if (userRequest.getEmail() == null && userRequest.getPhone() == null) {
+      throw new ValidationException("Email or phone must be not empty!");
     }
-
-    @Override
-    public Mono<UserPageResponse> getUsers() {
-        return Mono.fromFuture(
-                authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/")
-        ).map(response -> {
-            try {
-                return mapper.readValue(response.getResponseBody(), UserPageResponse.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @Override
-    public Mono<User> getUserById(Long id) {
-        return Mono.fromFuture(
-                authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/" + id)
-        ).map(response -> {
-            if (response.getStatusCode() == 404) throw new EntityNotFoundException("");
-            try {
-                return mapper.readValue(response.getResponseBody(), User.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @Override
-    public Mono<User> getUserByUsername(String username) {
-        return null;
-    }
-
-    @Override
-    public Mono<User> createUser(UserRequest userRequest) throws Exception {
-        if (userRequest.getEmail() == null && userRequest.getPhone() == null) {
-            throw new ValidationException("Email or phone must be not empty!");
-        }
 //        User user = new User()
 //                .setUsername(userRequest.getEmail() != null ? userRequest.getEmail() : userRequest.getPhone())
 //                .setEmail(userRequest.getEmail())
@@ -96,6 +96,6 @@ public class UserServiceImpl implements UserService {
 //                .build();
 //        Future<Response> userAuthService = httpClient.executeRequest(createUserAuthService);
 
-        return null;
-    }
+    return null;
+  }
 }
