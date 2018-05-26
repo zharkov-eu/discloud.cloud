@@ -14,41 +14,41 @@ import java.util.Set;
 @Table(name = "client")
 @Accessors(chain = true)
 public class Client {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "Client_Sequence")
-    @GenericGenerator(name = "Client_Sequence", strategy = "sequence", parameters = {
-            @Parameter(name = "sequence_name", value = "client_sequence")
-    })
-    private Long id;
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(generator = "Client_Sequence")
+  @GenericGenerator(name = "Client_Sequence", strategy = "sequence", parameters = {
+      @Parameter(name = "sequence_name", value = "client_sequence")
+  })
+  private Long id;
 
-    @Column(name = "email")
-    private String email;
+  @Column(name = "email")
+  private String email;
 
-    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
-    private Set<User> users;
+  @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+  private Set<User> users;
 
-    @Column(name = "first_name")
-    private String firstName;
+  @Column(name = "first_name")
+  private String firstName;
 
-    @Column(name = "last_name")
-    private String lastName;
+  @Column(name = "last_name")
+  private String lastName;
 
-    @ManyToOne(targetEntity = Country.class, cascade = CascadeType.PERSIST)
-    private Country country;
+  @ManyToOne(targetEntity = Country.class, cascade = CascadeType.PERSIST)
+  private Country country;
 
-    @Column(name = "state")
-    private String state;
+  @Column(name = "state")
+  private String state;
 
-    @Column(name = "city")
-    private String city;
+  @Column(name = "city")
+  private String city;
 
-    @Column(name = "street_address")
-    private String streetAddress;
+  @Column(name = "street_address")
+  private String streetAddress;
 
-    @Column(name = "postal_code")
-    private String postalCode;
+  @Column(name = "postal_code")
+  private String postalCode;
 
-    @Column(name = "balance")
-    private BigDecimal balance;
+  @Column(name = "balance")
+  private BigDecimal balance;
 }

@@ -14,16 +14,16 @@ import ru.discloud.user.web.model.ClientResponse;
 @RequestMapping("/api/user/")
 public class ClientController {
 
-    private final ClientService clientService;
+  private final ClientService clientService;
 
-    @Autowired
-    public ClientController(ClientService clientService) {
-        this.clientService = clientService;
-    }
+  @Autowired
+  public ClientController(ClientService clientService) {
+    this.clientService = clientService;
+  }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Page<ClientResponse> getClients(Pageable pageable) {
-        Page<Client> clientsPage = clientService.findAll(pageable);
-        return clientsPage.map(ClientResponse::new);
-    }
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  public Page<ClientResponse> getClients(Pageable pageable) {
+    Page<Client> clientsPage = clientService.findAll(pageable);
+    return clientsPage.map(ClientResponse::new);
+  }
 }

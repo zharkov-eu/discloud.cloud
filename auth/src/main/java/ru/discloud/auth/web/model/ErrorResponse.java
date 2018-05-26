@@ -1,13 +1,18 @@
 package ru.discloud.auth.web.model;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.springframework.http.HttpStatus;
+
+import java.util.Date;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class ErrorResponse {
-    private String exception;
-    private String message;
+  private String error;
+  private String message;
+  private Date timestamp;
+  private Integer status;
 }

@@ -5,6 +5,8 @@ import ru.discloud.gateway.domain.User;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
 
+import javax.xml.bind.ValidationException;
+
 public interface UserService {
   Mono<UserPageResponse> getUsers();
 
@@ -12,5 +14,7 @@ public interface UserService {
 
   Mono<User> getUserBy(String username, String email, String phone);
 
-  Mono<User> createUser(UserRequest userRequest) throws Exception;
+  Mono<User> createUser(UserRequest userRequest) throws ValidationException;
+
+  Mono<Void> deleteUser(Long id);
 }

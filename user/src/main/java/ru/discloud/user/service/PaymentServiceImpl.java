@@ -12,36 +12,36 @@ import javax.persistence.EntityNotFoundException;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private final PaymentRepository paymentRepository;
+  private final PaymentRepository paymentRepository;
 
-    @Autowired
-    public PaymentServiceImpl(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
-    }
+  @Autowired
+  public PaymentServiceImpl(PaymentRepository paymentRepository) {
+    this.paymentRepository = paymentRepository;
+  }
 
-    @Override
-    public Page<Payment> findAll(Pageable pageable) {
-        return paymentRepository.findAll(pageable);
-    }
+  @Override
+  public Page<Payment> findAll(Pageable pageable) {
+    return paymentRepository.findAll(pageable);
+  }
 
-    @Override
-    public Page<Payment> findByClient(Client client, Pageable pageable) {
-        return paymentRepository.findAllByClient(client, pageable);
-    }
+  @Override
+  public Page<Payment> findByClient(Client client, Pageable pageable) {
+    return paymentRepository.findAllByClient(client, pageable);
+  }
 
-    @Override
-    public Payment findById(Long id) {
-        return paymentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Payment '{" + id + "}' not found"));
-    }
+  @Override
+  public Payment findById(Long id) {
+    return paymentRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Payment '{" + id + "}' not found"));
+  }
 
-    @Override
-    public Payment createPayment() {
-        return null;
-    }
+  @Override
+  public Payment createPayment() {
+    return null;
+  }
 
-    @Override
-    public void capturePayment() {
+  @Override
+  public void capturePayment() {
 
-    }
+  }
 }

@@ -11,7 +11,6 @@ import ru.discloud.shared.UserPrivileges;
 public class User {
   private Long id;
   private String username;
-  private String password;
   private String email;
   private String phone;
   private UserPrivileges privileges;

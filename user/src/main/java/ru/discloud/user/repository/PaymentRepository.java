@@ -7,5 +7,5 @@ import ru.discloud.user.domain.Client;
 import ru.discloud.user.domain.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    Page<Payment> findAllByClient(Client client, Pageable pageable);
+  Page<Payment> findAllByClient(Client client, Pageable pageable);
 }

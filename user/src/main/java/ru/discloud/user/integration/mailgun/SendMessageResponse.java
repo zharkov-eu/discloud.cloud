@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SendMessageResponse {
-    private String id;
-    private String message;
+  private String id;
+  private String message;
 }

@@ -4,15 +4,18 @@ import lombok.AllArgsConstructor;
 import org.asynchttpclient.*;
 import org.springframework.stereotype.Component;
 import ru.discloud.gateway.config.EndpointConfig;
+import ru.discloud.gateway.exception.ServiceUnavailableException;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Component
 public class AuthRequestService {
-  private static final Integer DEFAULT_TIMEOUT = 60000;
+  private static final Integer DEFAULT_TIMEOUT = 1000;
 
   private final EndpointConfig authService = new EndpointConfig("auth");
   private final EndpointConfig fileService = new EndpointConfig("file");
@@ -85,6 +88,11 @@ public class AuthRequestService {
           } else {
             return CompletableFuture.supplyAsync(() -> response);
           }
+        }).exceptionally((ex) -> {
+          if (ex instanceof CompletionException && ex.getCause() instanceof ConnectException) {
+            throw new ServiceUnavailableException(String.format("{'%s'} service unavailable", service.toString()));
+          }
+          else throw new RuntimeException(ex);
         });
   }
 

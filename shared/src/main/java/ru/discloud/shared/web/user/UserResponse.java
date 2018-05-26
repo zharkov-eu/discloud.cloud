@@ -1,9 +1,24 @@
 package ru.discloud.shared.web.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.discloud.shared.UserPrivileges;
+
 public interface UserResponse {
-    String getEmail(String email);
-    String getPhone(String phone);
-    String getUsername(String username);
-    String getUserPrivileges(String privileges);
-    Long getQuota();
+  @JsonProperty("id")
+  Long getId();
+
+  @JsonProperty("email")
+  String getEmail();
+
+  @JsonProperty("phone")
+  String getPhone();
+
+  @JsonProperty("username")
+  String getUsername();
+
+  @JsonProperty("userPrivileges")
+  UserPrivileges getUserPrivileges();
+
+  @JsonProperty("quota")
+  Long getQuota();
 }

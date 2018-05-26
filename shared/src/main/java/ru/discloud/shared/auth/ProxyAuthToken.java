@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class AuthToken {
-    String token;
-    Long expire;
+public class ProxyAuthToken {
+  String token;
+  Long expire;
 }

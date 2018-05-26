@@ -6,15 +6,15 @@ import ru.discloud.user.domain.Client;
 import ru.discloud.user.web.model.ClientRequest;
 
 public interface ClientService {
-    Page<Client> findAll(Pageable pageable);
+  Page<Client> findAll(Pageable pageable);
 
-    Client findById(Long id);
+  Client findById(Long id);
 
-    Client findByEmail(String email);
+  Client findByEmail(String email);
 
-    Client save(ClientRequest clientRequest);
+  Client save(ClientRequest clientRequest);
 
-    Client update(Long id, ClientRequest clientRequest);
+  Client update(Long id, ClientRequest clientRequest);
 
-    void delete(Long id);
+  void delete(Long id);
 }

@@ -14,23 +14,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/user/country")
 public class CountryController {
-    private final CountryService countryService;
+  private final CountryService countryService;
 
-    @Autowired
-    public CountryController(CountryService countryService) {
-        this.countryService = countryService;
-    }
+  @Autowired
+  public CountryController(CountryService countryService) {
+    this.countryService = countryService;
+  }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<CountryResponse> getCountries() {
-        return countryService.findAll()
-                .stream()
-                .map(CountryResponse::new)
-                .collect(Collectors.toList());
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public List<CountryResponse> getCountries() {
+    return countryService.findAll()
+        .stream()
+        .map(CountryResponse::new)
+        .collect(Collectors.toList());
+  }
 
-    @RequestMapping(value = "/{key}", method = RequestMethod.GET)
-    public CountryResponse getCountry(@PathVariable String key) {
-        return new CountryResponse(countryService.findByKey(key));
-    }
+  @RequestMapping(value = "/{key}", method = RequestMethod.GET)
+  public CountryResponse getCountry(@PathVariable String key) {
+    return new CountryResponse(countryService.findByKey(key));
+  }
 }

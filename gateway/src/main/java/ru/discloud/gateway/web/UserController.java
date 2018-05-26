@@ -1,6 +1,7 @@
 package ru.discloud.gateway.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.discloud.gateway.domain.User;
@@ -33,5 +34,11 @@ public class UserController {
                                     @RequestParam(name = "email", required = false) String email,
                                     @RequestParam(name = "phone", required = false) String phone) {
     return userService.getUserBy(username, email, phone).map(UserResponse::new);
+  }
+
+  @DeleteMapping(path = "/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public Mono<Void> deleteUser(@PathVariable Long id) {
+    return userService.deleteUser(id);
   }
 }

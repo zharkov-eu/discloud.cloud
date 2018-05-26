@@ -10,21 +10,21 @@ import java.util.List;
 
 @Service
 public class CountryServiceImpl implements CountryService {
-    private final CountryRepository countryRepository;
+  private final CountryRepository countryRepository;
 
-    @Autowired
-    public CountryServiceImpl(CountryRepository countryRepository) {
-        this.countryRepository = countryRepository;
-    }
+  @Autowired
+  public CountryServiceImpl(CountryRepository countryRepository) {
+    this.countryRepository = countryRepository;
+  }
 
-    @Override
-    public Country findByKey(String key) {
-        return countryRepository.findById(key)
-                .orElseThrow(() -> new EntityNotFoundException("Country '{" + key + "}' not found"));
-    }
+  @Override
+  public Country findByKey(String key) {
+    return countryRepository.findById(key)
+        .orElseThrow(() -> new EntityNotFoundException("Country '{" + key + "}' not found"));
+  }
 
-    @Override
-    public List<Country> findAll() {
-        return countryRepository.findAll();
-    }
+  @Override
+  public List<Country> findAll() {
+    return countryRepository.findAll();
+  }
 }

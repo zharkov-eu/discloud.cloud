@@ -11,19 +11,19 @@ import javax.validation.constraints.*;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class UserRequest {
-    @Email(message = "Provided email isn't valid")
-    private String email;
+  @Email(message = "Provided email isn't valid")
+  private String email;
 
-    @Pattern(regexp = "(^$|[0-9]{10})", message = "Phone not provided")
-    private String phone;
+  @Pattern(regexp = "(^$|[0-9]{10})", message = "Phone not provided")
+  private String phone;
 
-    @NotBlank(message = "Username not provided")
-    private String username;
+  @NotBlank(message = "Username not provided")
+  private String username;
 
-    @MemberOf(value = "user,admin", message = "userPrivileges isn't recognized")
-    private String userPrivileges;
+  @MemberOf(value = "user,admin", message = "userPrivileges isn't recognized")
+  private String userPrivileges;
 
-    @NotNull(message = "Quota not provided")
-    @Positive(message = "Quota must be a positive value")
-    private Long quota;
+  @NotNull(message = "Quota not provided")
+  @Positive(message = "Quota must be a positive value")
+  private Long quota;
 }

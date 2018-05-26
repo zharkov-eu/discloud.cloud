@@ -7,19 +7,19 @@ import ru.discloud.user.domain.User;
 import ru.discloud.user.web.model.UserRequest;
 
 public interface UserService {
-    Page<User> findAll(Pageable pageable);
+  Page<User> findAll(Pageable pageable);
 
-    User findById(Long id);
+  User findById(Long id);
 
-    User findByEmail(String email);
+  User findByEmail(String email);
 
-    User findByPhone(String phone);
+  User findByPhone(String phone);
 
-    User findByUsername(String username);
+  User findByUsername(String username);
 
-    User save(UserRequest userRequest) throws JsonProcessingException;
+  User save(UserRequest userRequest) throws JsonProcessingException;
 
-    User update(Long id, UserRequest userRequest);
+  User update(Long id, UserRequest userRequest);
 
-    void delete(Long id);
+  void delete(Long id);
 }

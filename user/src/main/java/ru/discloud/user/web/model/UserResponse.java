@@ -9,17 +9,17 @@ import ru.discloud.user.domain.User;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-    private Long id;
-    private String email;
-    private String phone;
-    private String username;
-    private String privileges;
+  private Long id;
+  private String email;
+  private String phone;
+  private String username;
+  private String privileges;
 
-    public UserResponse(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.phone = user.getPhone();
-        this.username = user.getUsername();
-        this.privileges = user.getPrivileges().toString();
-    }
+  public UserResponse(User user) {
+    this.id = user.getId();
+    this.email = user.getEmail();
+    this.phone = user.getPhone();
+    this.username = user.getUsername();
+    this.privileges = user.getPrivileges().toString();
+  }
 }

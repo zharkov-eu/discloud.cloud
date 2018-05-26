@@ -6,13 +6,13 @@ import ru.discloud.user.domain.Client;
 import ru.discloud.user.domain.Payment;
 
 public interface PaymentService {
-    Page<Payment> findAll(Pageable pageable);
+  Page<Payment> findAll(Pageable pageable);
 
-    Page<Payment> findByClient(Client client, Pageable pageable);
+  Page<Payment> findByClient(Client client, Pageable pageable);
 
-    Payment findById(Long id);
+  Payment findById(Long id);
 
-    Payment createPayment();
+  Payment createPayment();
 
-    void capturePayment();
+  void capturePayment();
 }

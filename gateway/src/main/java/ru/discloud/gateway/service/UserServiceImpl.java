@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import ru.discloud.gateway.domain.User;
 import ru.discloud.gateway.exception.ServiceResponseException;
+import ru.discloud.gateway.exception.ServiceResponseParsingException;
+import ru.discloud.gateway.exception.service.EntityExistsException;
 import ru.discloud.gateway.request.service.AuthRequestService;
 import ru.discloud.gateway.request.service.ServiceEnum;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
 
-import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.util.Collections;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
   private AuthRequestService authRequest;
 
   @Autowired
-  public UserServiceImpl(AuthRequestService authRequest) throws IOException {
+  public UserServiceImpl(AuthRequestService authRequest) {
     this.authRequest = authRequest;
   }
 
@@ -45,9 +46,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Mono<User> getUserById(Long id) {
-    return Mono.fromFuture(
-        authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/" + id)
-    ).map(this::mapResponseToUser);
+    return Mono
+        .fromFuture(authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/" + id))
+        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response))
+        .map(this::mapResponseToUser);
   }
 
   @Override
@@ -57,13 +59,14 @@ public class UserServiceImpl implements UserService {
     if (email != null) query.put("email", Collections.singletonList(email));
     if (phone != null) query.put("phone", Collections.singletonList(phone));
 
-    return Mono.fromFuture(
-        authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/by/", query)
-    ).map(this::mapResponseToUser);
+    return Mono
+        .fromFuture(authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/by/", query))
+        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response))
+        .map(this::mapResponseToUser);
   }
 
   @Override
-  public Mono<User> createUser(UserRequest userRequest) throws Exception {
+  public Mono<User> createUser(UserRequest userRequest) throws ValidationException {
     if (userRequest.getEmail() == null && userRequest.getPhone() == null) {
       throw new ValidationException("Email or phone must be not empty!");
     }
@@ -75,7 +78,7 @@ public class UserServiceImpl implements UserService {
 //                .setPrivileges(UserPrivileges.USER)
 //                .setQuota(1024 * 1024L);
 //
-//        ru.discloud.shared.web.user.UserRequest userUserRequest = new ru.discloud.user.web.model.UserRequest()
+//        ru.discloud.shared.web.user.UserRequest userUserRequest = new ru.discloud.user.web.web.UserRequest()
 //                .setUsername(user.getUsername())
 //                .setEmail(user.getEmail())
 //                .setPhone(user.getPhone())
@@ -87,12 +90,12 @@ public class UserServiceImpl implements UserService {
 //                .build();
 //        Future<Response> userUserService = httpClient.executeRequest(createUserUserService);
 //        if (userUserService.get().getStatusCode() == HttpStatus.CREATED.value()) {
-//            ru.discloud.user.web.model.UserResponse userUserResponse = mapper.readValue(
-//                    userUserService.get().getResponseBody(), ru.discloud.user.web.model.UserResponse.class);
+//            ru.discloud.user.web.web.UserResponse userUserResponse = mapper.readValue(
+//                    userUserService.get().getResponseBody(), ru.discloud.user.web.web.UserResponse.class);
 //            user.setId(userUserResponse.getId());
 //        }
 //
-//        ru.discloud.auth.web.model.UserRequest authUserRequest = new ru.discloud.auth.web.model.UserRequest()
+//        ru.discloud.auth.web.web.UserRequest authUserRequest = new ru.discloud.auth.web.web.UserRequest()
 //                .setId(user.getId())
 //                .setUsername(user.getUsername())
 //                .setPassword(user.getPassword());
@@ -105,22 +108,40 @@ public class UserServiceImpl implements UserService {
     return null;
   }
 
+  @Override
+  public Mono<Void> deleteUser(Long id) {
+    return Mono
+        .fromFuture(authRequest.request(ServiceEnum.USER, "DELETE", "/api/user/user/" + id))
+        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response))
+        .then();
+  }
+
   private User mapResponseToUser(Response response) {
-    switch (response.getStatusCode()) {
-      case 200:
-        try {
-          return mapper.readValue(response.getResponseBody(), User.class);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      case 404:
-        throw new EntityNotFoundException("User not found");
-      default:
-        throw new ServiceResponseException(
-            String.format("Service %s bad response: code = %s, response = %s", ServiceEnum.USER, response.getStatusCode(), response.getResponseBody()),
-            response.getStatusCode(),
-            response.getResponseBody()
-        );
+    try {
+      return mapper.readValue(response.getResponseBody(), User.class);
+    } catch (IOException ex) {
+      throw new ServiceResponseParsingException(ex.getMessage());
+    }
+  }
+
+  private void checkServiceResponse(ServiceEnum service, Response response) {
+    try {
+      switch (response.getStatusCode()) {
+        case 200:
+        case 201:
+        case 204:
+          break;
+        case 404:
+          ServiceException notFoundException = mapper.readValue(response.getResponseBody(), ServiceException.class);
+          throw new EntityExistsException(service, notFoundException);
+        case 409:
+          ServiceException entityExistsException = mapper.readValue(response.getResponseBody(), ServiceException.class);
+          throw new EntityExistsException(service, entityExistsException);
+        default:
+          throw new ServiceResponseException(ServiceEnum.USER, response);
+      }
+    } catch (IOException ex) {
+      throw new ServiceResponseParsingException(ex.getMessage());
     }
   }
 }
