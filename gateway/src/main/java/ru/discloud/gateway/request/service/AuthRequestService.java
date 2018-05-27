@@ -91,8 +91,7 @@ public class AuthRequestService {
         }).exceptionally((ex) -> {
           if (ex instanceof CompletionException && ex.getCause() instanceof ConnectException) {
             throw new ServiceUnavailableException(String.format("{'%s'} service unavailable", service.toString()));
-          }
-          else throw new RuntimeException(ex);
+          } else throw new RuntimeException(ex);
         });
   }
 

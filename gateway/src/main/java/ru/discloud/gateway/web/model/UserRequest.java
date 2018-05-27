@@ -1,6 +1,7 @@
 package ru.discloud.gateway.web.model;
 
 import lombok.Data;
+import ru.discloud.shared.web.UtmLabel;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -18,4 +19,6 @@ public class UserRequest {
 
   @Size(min = 8, message = "Provided password length less than 8 symbols")
   private String password;
+
+  private UtmLabel utmLabel;
 }

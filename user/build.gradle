@@ -16,7 +16,6 @@ dependencies {
     compile("org.asynchttpclient:async-http-client:${asyncHttpClientVersion}")
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
 
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 

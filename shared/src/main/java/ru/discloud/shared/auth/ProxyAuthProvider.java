@@ -9,7 +9,7 @@ import lombok.Setter;
 import javax.xml.bind.DatatypeConverter;
 import java.util.*;
 
-public class ProxyAuthProvider {
+class ProxyAuthProvider {
   private final String delimiter = ":::";
   private final int LRU_MAX_CAPACITY = 100;
   private Map<String, Date> tokensLruCache = new LinkedHashMap<String, Date>(LRU_MAX_CAPACITY, 0.75f, true) {
@@ -19,29 +19,30 @@ public class ProxyAuthProvider {
     }
   };
   @Setter
-  private List<ProxyUser> users;
+  private Map<String, ProxyUser> users;
   @Setter
   private String secret;
 
   ProxyAuthProvider() {
-    this.users = new ArrayList<>();
+    this.users = new HashMap<>();
     this.secret = "";
   }
 
   ProxyAuthProvider(List<ProxyUser> users, String secret) {
-    this.users = users;
+    for (ProxyUser user : users) {
+      this.users.put(user.getUsername(), user);
+    }
     this.secret = secret;
   }
 
   Boolean checkAccessToken(String token) throws Exception {
     if (token.split(delimiter).length != 2) throw new ProxyTokenInvalidException();
-    String clientUsername = token.split(delimiter)[0];
+    String username = token.split(delimiter)[0];
     String accessToken = token.split(delimiter)[1];
     Date now = new Date();
 
-    ProxyUser user = users.stream()
-        .filter(it -> it.getUsername().equals(clientUsername))
-        .findFirst().orElseThrow(ProxyBadCredentialsException::new);
+    ProxyUser user = users.get(username);
+    if (user == null) throw new ProxyBadCredentialsException();
 
     Date cachedExpirationDate = tokensLruCache.get(accessToken);
     if (cachedExpirationDate != null) return now.before(cachedExpirationDate);
@@ -78,8 +79,7 @@ public class ProxyAuthProvider {
     if (authorization == null || !authorization.startsWith("Basic")) return Optional.empty();
     String base64Credentials = authorization.substring("Basic".length()).trim();
     String[] credentials = new String(DatatypeConverter.parseBase64Binary(base64Credentials)).split(":");
-    return users.stream()
-        .filter(it -> it.getUsername().equals(credentials[0]) && it.getPassword().equals(credentials[1]))
-        .findFirst();
+    ProxyUser user = users.get(credentials[0]);
+    return user != null && user.getPassword().equals(credentials[1]) ? Optional.of(user) : Optional.empty();
   }
 }

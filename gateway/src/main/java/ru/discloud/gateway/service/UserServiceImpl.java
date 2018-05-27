@@ -8,12 +8,14 @@ import reactor.core.publisher.Mono;
 import ru.discloud.gateway.domain.User;
 import ru.discloud.gateway.exception.ServiceResponseException;
 import ru.discloud.gateway.exception.ServiceResponseParsingException;
-import ru.discloud.gateway.exception.service.EntityExistsException;
+import ru.discloud.gateway.repository.redis.UserStatisticQueue;
 import ru.discloud.gateway.request.service.AuthRequestService;
 import ru.discloud.gateway.request.service.ServiceEnum;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.util.Collections;
@@ -24,11 +26,13 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
   private final ObjectMapper mapper = new ObjectMapper();
-  private AuthRequestService authRequest;
+  private final AuthRequestService authRequest;
+  private final UserStatisticQueue userStatisticQueue;
 
   @Autowired
-  public UserServiceImpl(AuthRequestService authRequest) {
+  public UserServiceImpl(AuthRequestService authRequest, UserStatisticQueue userStatisticQueue) {
     this.authRequest = authRequest;
+    this.userStatisticQueue = userStatisticQueue;
   }
 
   @Override
@@ -70,6 +74,12 @@ public class UserServiceImpl implements UserService {
     if (userRequest.getEmail() == null && userRequest.getPhone() == null) {
       throw new ValidationException("Email or phone must be not empty!");
     }
+
+    ru.discloud.shared.web.statistic.UserRequest statisticsUserRequest = new ru.discloud.shared.web.statistic.UserRequest()
+        .setUsername(userRequest.getUsername())
+        .setUtm(userRequest.getUtmLabel());
+    userStatisticQueue.enqueue(statisticsUserRequest);
+
 //        User user = new User()
 //                .setUsername(userRequest.getEmail() != null ? userRequest.getEmail() : userRequest.getPhone())
 //                .setEmail(userRequest.getEmail())
@@ -125,23 +135,17 @@ public class UserServiceImpl implements UserService {
   }
 
   private void checkServiceResponse(ServiceEnum service, Response response) {
-    try {
-      switch (response.getStatusCode()) {
-        case 200:
-        case 201:
-        case 204:
-          break;
-        case 404:
-          ServiceException notFoundException = mapper.readValue(response.getResponseBody(), ServiceException.class);
-          throw new EntityExistsException(service, notFoundException);
-        case 409:
-          ServiceException entityExistsException = mapper.readValue(response.getResponseBody(), ServiceException.class);
-          throw new EntityExistsException(service, entityExistsException);
-        default:
-          throw new ServiceResponseException(ServiceEnum.USER, response);
-      }
-    } catch (IOException ex) {
-      throw new ServiceResponseParsingException(ex.getMessage());
+    switch (response.getStatusCode()) {
+      case 200:
+      case 201:
+      case 204:
+        break;
+      case 404:
+        throw new EntityNotFoundException();
+      case 409:
+        throw new EntityExistsException();
+      default:
+        throw new ServiceResponseException(ServiceEnum.USER, response);
     }
   }
 }

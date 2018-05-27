@@ -7,7 +7,9 @@ import ru.discloud.shared.web.ErrorResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProxyAuthInterceptor extends HandlerInterceptorAdapter {
   private final ProxyAuthProvider authProvider;
@@ -22,7 +24,9 @@ public class ProxyAuthInterceptor extends HandlerInterceptorAdapter {
   }
 
   protected void setAuthProviderCredentials(List<ProxyUser> users, String secret) {
-    this.authProvider.setUsers(users);
+    Map<String, ProxyUser> userMap = new HashMap<>();
+    users.forEach(it -> userMap.put(it.getUsername(), it));
+    this.authProvider.setUsers(userMap);
     this.authProvider.setSecret(secret);
   }
 

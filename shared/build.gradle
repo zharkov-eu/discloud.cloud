@@ -11,8 +11,9 @@ repositories {
 
 dependencies {
     compile("io.jsonwebtoken:jjwt:${jjwtVersion}")
-    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
 
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 }
