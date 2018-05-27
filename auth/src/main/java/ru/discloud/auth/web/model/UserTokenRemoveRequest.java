@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UserTokenRemoveRequest {
-    Long userId;
-    String deviceId;
+  Long userId;
+  String deviceId;
 }

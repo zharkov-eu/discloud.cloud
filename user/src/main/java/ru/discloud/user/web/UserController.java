@@ -6,10 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.discloud.shared.web.user.UserRequest;
 import ru.discloud.user.domain.User;
 import ru.discloud.user.integration.mailgun.MailClient;
 import ru.discloud.user.service.UserService;
-import ru.discloud.user.web.model.UserRequest;
 import ru.discloud.user.web.model.UserResponse;
 
 import javax.persistence.EntityNotFoundException;

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppTokenCodeResponse {
-    private String code;
-    private String redirectUrl;
+  private String code;
+  private String redirectUrl;
 }

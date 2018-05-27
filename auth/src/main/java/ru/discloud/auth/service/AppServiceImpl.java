@@ -15,41 +15,41 @@ import javax.persistence.EntityNotFoundException;
 
 @Service
 public class AppServiceImpl implements AppService {
-    private final AppRepository appRepository;
-    private final ReverseLookupEnum<AppTokenType> appTokenType = new ReverseLookupEnum<>(AppTokenType.class);
-    private final ReverseLookupEnum<AppTokenPermission> appTokenPermission = new ReverseLookupEnum<>(AppTokenPermission.class);
+  private final AppRepository appRepository;
+  private final ReverseLookupEnum<AppTokenType> appTokenType = new ReverseLookupEnum<>(AppTokenType.class);
+  private final ReverseLookupEnum<AppTokenPermission> appTokenPermission = new ReverseLookupEnum<>(AppTokenPermission.class);
 
-    @Autowired
-    public AppServiceImpl(AppRepository appRepository) {
-        this.appRepository = appRepository;
+  @Autowired
+  public AppServiceImpl(AppRepository appRepository) {
+    this.appRepository = appRepository;
+  }
+
+  @Override
+  public App findById(Integer id) {
+    return appRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("App '{" + id + "}' not found"));
+  }
+
+  @Override
+  public App save(AppRequest appRequest) {
+    App existingApp = appRepository.findByName(appRequest.getName()).orElse(null);
+    if (existingApp != null) {
+      throw new EntityExistsException("App with name '{" + appRequest.getName() + "}' already exist");
     }
 
-    @Override
-    public App findById(Integer id) {
-        return appRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("App '{" + id + "}' not found"));
-    }
+    App app = new App()
+        .setName(appRequest.getName())
+        .setSecret(RandomStringUtils.randomAlphanumeric(75))
+        .setTokenType(appTokenType.get(appRequest.getTokenType()))
+        .setTokenPermission(appTokenPermission.get(appRequest.getTokenPermission()));
 
-    @Override
-    public App save(AppRequest appRequest) {
-        App existingApp = appRepository.findByName(appRequest.getName()).orElse(null);
-        if (existingApp != null) {
-            throw new EntityExistsException("App with name '{" + appRequest.getName() + "}' already exist");
-        }
+    return appRepository.save(app);
+  }
 
-        App app = new App()
-                .setName(appRequest.getName())
-                .setSecret(RandomStringUtils.randomAlphanumeric(75))
-                .setTokenType(appTokenType.get(appRequest.getTokenType()))
-                .setTokenPermission(appTokenPermission.get(appRequest.getTokenPermission()));
-
-        return appRepository.save(app);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        appRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("App '{" + id + "}' not found"));
-        appRepository.deleteById(id);
-    }
+  @Override
+  public void delete(Integer id) {
+    appRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("App '{" + id + "}' not found"));
+    appRepository.deleteById(id);
+  }
 }

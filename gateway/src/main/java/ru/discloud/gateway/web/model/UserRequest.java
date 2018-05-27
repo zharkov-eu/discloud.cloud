@@ -5,7 +5,9 @@ import ru.discloud.shared.web.UtmLabel;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 public class UserRequest {
@@ -14,6 +16,9 @@ public class UserRequest {
 
   @NotEmpty(message = "Phone not provided")
   private String phone;
+
+  @NotNull(message = "Group not provided")
+  private List<String> group;
 
   private String username;
 

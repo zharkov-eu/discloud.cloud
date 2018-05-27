@@ -1,0 +1,11 @@
+version: '2.2'
+
+services:
+  discloud-auth:
+    image: discloud/user
+    build: .
+    restart: always
+    ports:
+      - 9030:9030
+    container_name: discloud-user
+    mem_limit: 512

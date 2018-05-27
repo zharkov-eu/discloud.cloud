@@ -11,11 +11,11 @@ import ru.discloud.auth.web.model.UserTokenRemoveRequest;
 import ru.discloud.auth.web.model.UserTokenRequest;
 
 public interface UserTokenService {
-    UserToken create(UserTokenInitialRequest userTokenInitialRequest) throws UserCredentialsException;
+  UserToken create(UserTokenInitialRequest userTokenInitialRequest) throws UserCredentialsException;
 
-    UserToken refresh(UserTokenRefreshRequest userTokenRefreshRequest) throws TokenExpiredException, TokenInvalidException;
+  UserToken refresh(UserTokenRefreshRequest userTokenRefreshRequest) throws TokenExpiredException, TokenInvalidException;
 
-    User checkAccessToken(UserTokenRequest userTokenRequest) throws TokenExpiredException, TokenInvalidException;
+  User checkAccessToken(UserTokenRequest userTokenRequest) throws TokenExpiredException, TokenInvalidException;
 
-    void deleteToken(UserTokenRemoveRequest userTokenRequest);
+  void deleteToken(UserTokenRemoveRequest userTokenRequest);
 }

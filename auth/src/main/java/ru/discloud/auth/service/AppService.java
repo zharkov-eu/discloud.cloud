@@ -8,9 +8,9 @@ import javax.persistence.EntityNotFoundException;
 
 public interface AppService {
 
-    App findById(Integer id) throws EntityNotFoundException;
+  App findById(Integer id) throws EntityNotFoundException;
 
-    App save(AppRequest appRequest) throws EntityExistsException;
+  App save(AppRequest appRequest) throws EntityExistsException;
 
-    void delete(Integer id);
+  void delete(Integer id);
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AppTokenDevice {
-    private Integer appId;
-    private Long userId;
-    private String deviceId;
+  private Integer appId;
+  private Long userId;
+  private String deviceId;
 }

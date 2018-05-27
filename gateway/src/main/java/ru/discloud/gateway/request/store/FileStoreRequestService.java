@@ -3,6 +3,7 @@ package ru.discloud.gateway.request.store;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.asynchttpclient.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -14,18 +15,33 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Log4j2
 @Service
-public class FileStoreRequest {
+public class FileStoreRequestService {
   private final ObjectMapper mapper = new ObjectMapper();
   private final AuthRequestService requestService;
   private Map<String, FileNode> fileNodes;
 
   @Autowired
-  public FileStoreRequest(AuthRequestService requestService) {
+  public FileStoreRequestService(AuthRequestService requestService) {
     this.requestService = requestService;
     this.fileNodes = new HashMap<>();
+  }
+
+  public CompletableFuture<Response> request(String method, String url) {
+    return requestService.request(ServiceEnum.FILE, method, url);
+  }
+
+  public CompletableFuture<Response> request(String method, String url,
+                                             Map<String, List<String>> queryParams) {
+    return requestService.request(ServiceEnum.FILE, method, url, queryParams);
+  }
+
+  public CompletableFuture<Response> request(String method, String url,
+                                             Map<String, List<String>> queryParams, String body) {
+    return requestService.request(ServiceEnum.FILE, method, url, queryParams, body);
   }
 
   private void refreshFileNodes() {

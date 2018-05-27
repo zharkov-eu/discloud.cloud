@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.discloud.auth.domain.User;
 import ru.discloud.auth.service.UserService;
-import ru.discloud.auth.web.model.UserRequest;
 import ru.discloud.auth.web.model.UserResponse;
+import ru.discloud.shared.web.auth.UserRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,30 +16,29 @@ import javax.validation.Valid;
 @RequestMapping("/api/auth/user")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  @Autowired
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public UserResponse getUser(@PathVariable Long id) {
-        return new UserResponse(this.userService.findById(id));
-    }
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  public UserResponse getUser(@PathVariable Long id) {
+    return new UserResponse(this.userService.findById(id));
+  }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST)
-    public UserResponse createUser(@Valid @RequestBody UserRequest userRequest, HttpServletResponse response) throws Exception {
-        User user = this.userService.save(userRequest);
-        response.addHeader(HttpHeaders.LOCATION, "/api/auth/user/" + user.getId());
-        return new UserResponse(user);
-    }
+  @ResponseStatus(HttpStatus.CREATED)
+  @RequestMapping(method = RequestMethod.POST)
+  public UserResponse createUser(@Valid @RequestBody UserRequest userRequest, HttpServletResponse response) throws Exception {
+    User user = this.userService.save(userRequest);
+    response.addHeader(HttpHeaders.LOCATION, "/api/auth/user/" + user.getId());
+    return new UserResponse(user);
+  }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable Long id) {
-        this.userService.delete(id);
-    }
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+  public void deleteUser(@PathVariable Long id) {
+    this.userService.delete(id);
+  }
 }
-

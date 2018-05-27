@@ -10,7 +10,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @EnableRedisRepositories(basePackages = {"ru.discloud.auth.repository.redis"})
 public class AuthApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(AuthApplication.class, args);
+  }
 }

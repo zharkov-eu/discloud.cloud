@@ -6,6 +6,6 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class AppTokenRequest {
-    @NotEmpty(message = "Property 'accessToken' isn't provided")
-    String accessToken;
+  @NotEmpty(message = "Property 'accessToken' isn't provided")
+  String accessToken;
 }

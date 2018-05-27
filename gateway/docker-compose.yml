@@ -1,0 +1,11 @@
+version: '2.2'
+
+services:
+  discloud-auth:
+    image: discloud/gateway
+    build: .
+    restart: always
+    ports:
+      - 9000:9000
+    container_name: discloud-gateway
+    mem_limit: 512

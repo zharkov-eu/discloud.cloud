@@ -11,7 +11,6 @@ import ru.discloud.user.domain.User;
 import ru.discloud.user.integration.mailgun.MailClient;
 import ru.discloud.user.mail.UserSignupMessage;
 import ru.discloud.user.repository.UserRepository;
-import ru.discloud.user.web.model.UserRequest;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;

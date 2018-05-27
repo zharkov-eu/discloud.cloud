@@ -1,24 +1,26 @@
 package ru.discloud.shared.web.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import ru.discloud.shared.UserPrivileges;
 
-public interface UserResponse {
+@Data
+public class UserResponse {
   @JsonProperty("id")
-  Long getId();
+  protected Long id;
 
   @JsonProperty("email")
-  String getEmail();
+  protected String email;
 
   @JsonProperty("phone")
-  String getPhone();
+  protected String phone;
 
   @JsonProperty("username")
-  String getUsername();
+  protected String username;
 
-  @JsonProperty("userPrivileges")
-  UserPrivileges getUserPrivileges();
+  @JsonProperty("privileges")
+  protected UserPrivileges privileges;
 
   @JsonProperty("quota")
-  Long getQuota();
+  protected Long quota;
 }

@@ -11,15 +11,15 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppTokenResponse {
-    private String accessToken;
-    private Date accessExpires;
-    private String refreshToken;
-    private Date refreshExpires;
+  private String accessToken;
+  private Date accessExpires;
+  private String refreshToken;
+  private Date refreshExpires;
 
-    public AppTokenResponse(AppToken appToken) {
-        this.accessToken = appToken.getAccessToken();
-        this.accessExpires = appToken.getAccessExpires();
-        this.refreshToken = appToken.getRefreshToken();
-        this.refreshExpires = appToken.getRefreshExpires();
-    }
+  public AppTokenResponse(AppToken appToken) {
+    this.accessToken = appToken.getAccessToken();
+    this.accessExpires = appToken.getAccessExpires();
+    this.refreshToken = appToken.getRefreshToken();
+    this.refreshExpires = appToken.getRefreshExpires();
+  }
 }

@@ -7,7 +7,11 @@ import reactor.core.publisher.Mono;
 import ru.discloud.gateway.domain.User;
 import ru.discloud.gateway.service.UserService;
 import ru.discloud.gateway.web.model.UserPageResponse;
+import ru.discloud.gateway.web.model.UserRequest;
 import ru.discloud.gateway.web.model.UserResponse;
+
+import javax.validation.Valid;
+import javax.xml.bind.ValidationException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -17,6 +21,11 @@ public class UserController {
   @Autowired
   public UserController(UserService userService) {
     this.userService = userService;
+  }
+
+  @PostMapping()
+  public Mono<UserResponse> createUser(@Valid  @RequestBody UserRequest userRequest) throws ValidationException {
+    return userService.createUser(userRequest).map(UserResponse::new);
   }
 
   @GetMapping(path = "/")

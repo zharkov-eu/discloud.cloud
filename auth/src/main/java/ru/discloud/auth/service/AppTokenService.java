@@ -12,13 +12,13 @@ import ru.discloud.auth.web.model.AppTokenRefreshRequest;
 import ru.discloud.auth.web.model.AppTokenRequest;
 
 public interface AppTokenService {
-    AppToken create(AppTokenInitialRequest appTokenInitialRequest) throws UserCredentialsException;
+  AppToken create(AppTokenInitialRequest appTokenInitialRequest) throws UserCredentialsException;
 
-    AppToken findByAppCode(AppTokenCodeRequest appTokenCodeRequest) throws AppCredentialsException;
+  AppToken findByAppCode(AppTokenCodeRequest appTokenCodeRequest) throws AppCredentialsException;
 
-    AppToken refresh(AppTokenRefreshRequest appTokenRefreshRequest) throws Exception;
+  AppToken refresh(AppTokenRefreshRequest appTokenRefreshRequest) throws Exception;
 
-    User checkAccessToken(AppTokenRequest appTokenRequest) throws TokenExpiredException, TokenInvalidException;
+  User checkAccessToken(AppTokenRequest appTokenRequest) throws TokenExpiredException, TokenInvalidException;
 
-    void deleteToken(AppTokenRequest appTokenRequest) throws TokenInvalidException;
+  void deleteToken(AppTokenRequest appTokenRequest) throws TokenInvalidException;
 }

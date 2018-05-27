@@ -15,10 +15,6 @@ import javax.persistence.*;
 public class User {
   @Id
   @Column(name = "id")
-  @GeneratedValue(generator = "User_Sequence")
-  @GenericGenerator(name = "User_Sequence", strategy = "sequence", parameters = {
-      @Parameter(name = "sequence_name", value = "user_sequence")
-  })
   private Long id;
 
   @Column(name = "email", unique = true)

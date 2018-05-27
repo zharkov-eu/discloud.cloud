@@ -2,17 +2,17 @@ package ru.discloud.auth.service;
 
 import ru.discloud.auth.domain.User;
 import ru.discloud.auth.exception.UserCredentialsException;
-import ru.discloud.auth.web.model.UserRequest;
+import ru.discloud.shared.web.auth.UserRequest;
 
 public interface UserService {
 
-    User findById(Long id);
+  User findById(Long id);
 
-    User findByUsername(String username);
+  User findByUsername(String username);
 
-    User checkCredentials(String username, String password) throws UserCredentialsException;
+  User checkCredentials(String username, String password) throws UserCredentialsException;
 
-    User save(UserRequest userRequest) throws Exception;
+  User save(UserRequest userRequest) throws Exception;
 
-    void delete(Long id);
+  void delete(Long id);
 }

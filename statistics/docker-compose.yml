@@ -1,0 +1,11 @@
+version: '2.2'
+
+services:
+  discloud-auth:
+    image: discloud/statistics
+    build: .
+    restart: always
+    ports:
+      - 9020:9020
+    container_name: discloud-statistics
+    mem_limit: 512
