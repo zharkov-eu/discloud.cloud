@@ -133,14 +133,7 @@ public class UserServiceImpl implements UserService {
         .doOnNext(response -> fallbackRequest.add(
             Mono.fromFuture(fileRequest.request("DELETE", "/user/" + it.getId()))
         ))
-        .collectList()
-        .then(it -> {
-          ru.discloud.shared.web.statistic.UserRequest statisticsUserRequest = new ru.discloud.shared.web.statistic.UserRequest()
-              .setUsername(userRequest.getUsername())
-              .setUtm(userRequest.getUtmLabel());
-          userStatisticQueue.enqueue(statisticsUserRequest);
-          return Mono.fromCallable(() -> user);
-        });
+        .collectList();
 
 
     ru.discloud.shared.web.statistic.UserRequest statisticsUserRequest = new ru.discloud.shared.web.statistic.UserRequest()

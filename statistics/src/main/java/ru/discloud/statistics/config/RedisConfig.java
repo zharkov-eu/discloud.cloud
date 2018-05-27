@@ -9,7 +9,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import ru.discloud.statistics.queue.RedisMessageSubscriber;
+import ru.discloud.statistics.queue.QueueHandler;
 
 @Configuration
 @ComponentScan("ru.discloud.statistics")
@@ -31,6 +31,6 @@ public class RedisConfig {
 
     @Bean
     MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+        return new MessageListenerAdapter(new QueueHandler());
     }
 }

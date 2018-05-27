@@ -39,7 +39,7 @@ public class RedisQueue<T> {
     redisTemplate.opsForList().rightPop(processingQueueName);
   }
 
-  public void bury() throws IOException {
+  public void bury() {
     redisTemplate.opsForList().rightPopAndLeftPush(processingQueueName, fallbackQueueName);
   }
 }
