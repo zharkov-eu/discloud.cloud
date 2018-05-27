@@ -1,11 +1,9 @@
 package ru.discloud.gateway.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.asynchttpclient.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.discloud.gateway.domain.User;
 import ru.discloud.gateway.exception.ServiceResponseException;
@@ -16,7 +14,6 @@ import ru.discloud.gateway.request.service.ServiceEnum;
 import ru.discloud.gateway.request.store.FileStoreRequestService;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
-import ru.discloud.shared.UserPrivileges;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -75,72 +72,73 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Mono<User> createUser(UserRequest userRequest) throws ValidationException, JsonProcessingException {
+  public Mono<User> createUser(UserRequest userRequest) throws ValidationException {
     if (userRequest.getEmail() == null && userRequest.getPhone() == null) {
       throw new ValidationException("Email or phone must be not empty!");
     }
 
-    List<Mono<Response>> fallbackRequest = new ArrayList<>();
-
-    User user = new User()
-        .setUsername(userRequest.getEmail() != null ? userRequest.getEmail() : userRequest.getPhone())
-        .setEmail(userRequest.getEmail())
-        .setPhone(userRequest.getPhone())
-        .setGroup(userRequest.getGroup())
-        .setPassword(userRequest.getPassword())
-        .setPrivileges(UserPrivileges.USER)
-        .setQuota(1024 * 1024L);
-
-    ru.discloud.shared.web.core.UserRequest coreUserRequest = new ru.discloud.shared.web.core.UserRequest()
-        .setUsername(user.getUsername())
-        .setGroup(user.getGroup())
-        .setPassword(userRequest.getPassword());
-
-    User fileServiceUser = Mono
-        .fromFuture(fileRequest.request("POST", "/user", null, mapper.writeValueAsString(coreUserRequest)))
-        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.FILE, response))
-        .map(this::mapResponseToUser)
-        .doOnSuccess(it -> {
-          user.setId(it.getId());
-          fallbackRequest.add(
-              Mono.fromFuture(fileRequest.request("DELETE", "/user/" + it.getId()))
-          );
-        })
-        .block();
-
-    ru.discloud.shared.web.user.UserRequest userUserRequest = new ru.discloud.shared.web.user.UserRequest()
-        .setId(user.getId())
-        .setUsername(user.getUsername())
-        .setEmail(user.getEmail())
-        .setPhone(user.getPhone())
-        .setUserPrivileges(user.getPrivileges())
-        .setQuota(user.getQuota());
-
-    Mono<Response> userUserResponse = Mono.fromFuture(
-        authRequest.request(ServiceEnum.USER, "POST", "/api/user/user", null, mapper.writeValueAsString(userUserRequest))
-    ).doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response));
-
-    ru.discloud.shared.web.auth.UserRequest authUserRequest = new ru.discloud.shared.web.auth.UserRequest()
-        .setId(user.getId())
-        .setUsername(user.getUsername())
-        .setPassword(user.getPassword());
-
-    Mono<Response> userAuthResponse = Mono.fromFuture(
-        authRequest.request(ServiceEnum.AUTH, "POST", "/api/auth/user", null, mapper.writeValueAsString(authUserRequest))
-    ).doOnSuccess(response -> checkServiceResponse(ServiceEnum.AUTH, response));
-
-    return Flux.concat(userUserResponse, userAuthResponse)
-        .doOnNext(response -> fallbackRequest.add(
-            Mono.fromFuture(fileRequest.request("DELETE", "/user/" + it.getId()))
-        ))
-        .collectList();
+//    List<Mono<Response>> fallbackRequest = new ArrayList<>();
+//
+//    User user = new User()
+//        .setUsername(userRequest.getEmail() != null ? userRequest.getEmail() : userRequest.getPhone())
+//        .setEmail(userRequest.getEmail())
+//        .setPhone(userRequest.getPhone())
+//        .setGroup(userRequest.getGroup())
+//        .setPassword(userRequest.getPassword())
+//        .setPrivileges(UserPrivileges.USER)
+//        .setQuota(1024 * 1024L);
+//
+//    ru.discloud.shared.web.core.UserRequest coreUserRequest = new ru.discloud.shared.web.core.UserRequest()
+//        .setUsername(user.getUsername())
+//        .setGroup(user.getGroup())
+//        .setPassword(userRequest.getPassword());
+//
+//    User fileServiceUser = Mono
+//        .fromFuture(fileRequest.request("POST", "/user", null, mapper.writeValueAsString(coreUserRequest)))
+//        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.FILE, response))
+//        .map(this::mapResponseToUser)
+//        .doOnSuccess(it -> {
+//          user.setId(it.getId());
+//          fallbackRequest.add(
+//              Mono.fromFuture(fileRequest.request("DELETE", "/user/" + it.getId()))
+//          );
+//        })
+//        .block();
+//
+//    ru.discloud.shared.web.user.UserRequest userUserRequest = new ru.discloud.shared.web.user.UserRequest()
+//        .setId(user.getId())
+//        .setUsername(user.getUsername())
+//        .setEmail(user.getEmail())
+//        .setPhone(user.getPhone())
+//        .setUserPrivileges(user.getPrivileges())
+//        .setQuota(user.getQuota());
+//
+//    Mono<Response> userUserResponse = Mono.fromFuture(
+//        authRequest.request(ServiceEnum.USER, "POST", "/api/user/user", null, mapper.writeValueAsString(userUserRequest))
+//    ).doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response));
+//
+//    ru.discloud.shared.web.auth.UserRequest authUserRequest = new ru.discloud.shared.web.auth.UserRequest()
+//        .setId(user.getId())
+//        .setUsername(user.getUsername())
+//        .setPassword(user.getPassword());
+//
+//    Mono<Response> userAuthResponse = Mono.fromFuture(
+//        authRequest.request(ServiceEnum.AUTH, "POST", "/api/auth/user", null, mapper.writeValueAsString(authUserRequest))
+//    ).doOnSuccess(response -> checkServiceResponse(ServiceEnum.AUTH, response));
+//
+//    return Flux.concat(userUserResponse, userAuthResponse)
+//        .doOnNext(response -> fallbackRequest.add(
+//            Mono.fromFuture(fileRequest.request("DELETE", "/user/" + it.getId()))
+//        ))
+//        .collectList();
 
 
     ru.discloud.shared.web.statistic.UserRequest statisticsUserRequest = new ru.discloud.shared.web.statistic.UserRequest()
         .setUsername(userRequest.getUsername())
-        .setUtm(userRequest.getUtmLabel());
+        .setUtm(userRequest.getUtm());
     userStatisticQueue.enqueue(statisticsUserRequest);
 
+    return Mono.empty();
   }
 
   @Override

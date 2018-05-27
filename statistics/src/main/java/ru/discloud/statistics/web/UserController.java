@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.discloud.shared.web.statistic.UploadRequest;
-import ru.discloud.statistics.queue.UploadQueueHandler;
-import ru.discloud.statistics.service.UploadService;
+import ru.discloud.shared.web.statistic.UserRequest;
+import ru.discloud.statistics.queue.UserQueueHandler;
+import ru.discloud.statistics.service.UserService;
 import ru.discloud.statistics.web.model.AckResponse;
 
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/api/statistics/upload")
-public class UploadController {
-  private final UploadService uploadService;
+@RequestMapping("/api/statistics/user")
+public class UserController {
+  private final UserService userService;
 
-  public UploadController(UploadService uploadService, UploadQueueHandler queueHandler) {
-    this.uploadService = uploadService;
+  public UserController(UserService userService, UserQueueHandler queueHandler) {
+    this.userService = userService;
     queueHandler.handle();
   }
 
   @ResponseStatus(HttpStatus.CREATED)
   @RequestMapping(method = RequestMethod.POST)
-  public AckResponse save(@Valid @RequestBody UploadRequest request) {
-    uploadService.save(request);
+  public AckResponse save(@Valid @RequestBody UserRequest request) {
+    userService.save(request);
     return new AckResponse(true);
   }
 }

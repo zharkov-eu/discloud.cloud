@@ -20,6 +20,10 @@ subprojects {
     group = 'ru.discloud'
     sourceCompatibility = 1.8
 
+    dependencies {
+        compile 'org.jetbrains:annotations:16.0.2'
+    }
+
     //noinspection GroovyAssignabilityCheck
     task makeConfig << {
         Properties props = new Properties()

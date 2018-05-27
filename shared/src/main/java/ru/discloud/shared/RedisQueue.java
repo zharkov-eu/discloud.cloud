@@ -2,6 +2,8 @@ package ru.discloud.shared;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.IOException;
@@ -27,12 +29,14 @@ public class RedisQueue<T> {
     this.fallbackQueueName = queueName + DELIMITER + "fallback";
   }
 
-  public void enqueue(T element) throws JsonProcessingException {
+  public void enqueue(@NotNull T element) throws JsonProcessingException {
     redisTemplate.boundListOps(queueName).leftPush(mapper.writeValueAsString(element));
   }
 
+  @Nullable
   public T ack() throws IOException {
-    return mapper.readValue(redisTemplate.opsForList().rightPopAndLeftPush(queueName, processingQueueName), typeParameterClass);
+    String request = redisTemplate.opsForList().rightPopAndLeftPush(queueName, processingQueueName);
+    return request != null ? mapper.readValue(request, typeParameterClass) : null;
   }
 
   public void peek() {

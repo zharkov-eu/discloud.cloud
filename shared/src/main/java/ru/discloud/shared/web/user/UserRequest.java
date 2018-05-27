@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.discloud.shared.MemberOf;
-import ru.discloud.shared.UserPrivileges;
 
 import javax.validation.constraints.*;
 
@@ -30,7 +29,7 @@ public class UserRequest {
 
   @JsonProperty("privileges")
   @MemberOf(value = "user,admin", message = "privileges isn't recognized")
-  protected UserPrivileges userPrivileges;
+  protected String userPrivileges;
 
   @JsonProperty("quota")
   @NotNull(message = "Quota not provided")

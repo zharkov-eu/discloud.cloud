@@ -25,5 +25,5 @@ public class UserRequest {
   @Size(min = 8, message = "Provided password length less than 8 symbols")
   private String password;
 
-  private UtmLabel utmLabel;
+  private UtmLabel utm;
 }

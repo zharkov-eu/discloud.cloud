@@ -1,14 +1,20 @@
 package ru.discloud.statistics.web.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AckResponse {
-    Boolean success;
+  private Boolean success;
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+  private Date timestamp;
+
+  public AckResponse(Boolean success) {
+    this.success = success;
+    this.timestamp = new Date();
+  }
 }

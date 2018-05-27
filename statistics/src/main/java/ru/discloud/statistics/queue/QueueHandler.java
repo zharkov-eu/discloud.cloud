@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Log4j2
-public class QueueHandler<T> {
+class QueueHandler<T> {
   private static final String DELIMITER = ":::";
 
   private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -24,16 +24,19 @@ public class QueueHandler<T> {
     this.queue = new RedisQueue<>(redisTemplate, typeParameterClass, queueName);
   }
 
-  public void handle(QueueCallback<T> callback) {
-    executorService.schedule(() -> {
-      T entity = null;
+  void handle(QueueCallback<T> callback) {
+    executorService.scheduleWithFixedDelay(() -> {
       try {
-        callback.cb(queue.ack());
-        queue.peek();
+        T entity = queue.ack();
+        if (entity == null) Thread.sleep(500L);
+        else {
+          callback.cb(entity);
+          queue.peek();
+        }
       } catch (Exception e) {
         queue.bury();
-        log.error(e.getMessage());
+        log.error(e.getClass().getSimpleName() + " : " + e.getMessage());
       }
-    }, 1L, TimeUnit.SECONDS);
+    }, 0L, 10L, TimeUnit.MILLISECONDS);
   }
 }

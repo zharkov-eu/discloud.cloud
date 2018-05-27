@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.discloud.shared.ReverseLookupEnum;
 import ru.discloud.shared.UserPrivileges;
+import ru.discloud.shared.web.user.UserRequest;
 import ru.discloud.user.domain.User;
 import ru.discloud.user.integration.mailgun.MailClient;
 import ru.discloud.user.mail.UserSignupMessage;

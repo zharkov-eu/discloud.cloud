@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import ru.discloud.shared.RedisQueue;
 
 class StatisticQueue<T> {
-  private final static String DELIMITER = "::";
+  private static final String DELIMITER = ":::";
 
   private final RedisQueue<T> queue;
 

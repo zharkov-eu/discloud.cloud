@@ -2,11 +2,14 @@ package ru.discloud.statistics.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Nullable;
+import ru.discloud.shared.web.UtmLabel;
 
 @Data
 @Accessors(chain = true)
-public class Upload {
+public class User {
   private String username;
-  private Boolean encrypted;
-  private Integer size;
+
+  @Nullable
+  private UtmLabel utmLabel;
 }
