@@ -22,18 +22,23 @@ public class GroupController {
   }
 
   @PostMapping()
-  public Mono<GroupResponse> createUser(@Valid @RequestBody GroupRequest groupRequest) throws ValidationException {
+  public Mono<GroupResponse> createGroup(@Valid @RequestBody GroupRequest groupRequest) throws ValidationException {
     return groupService.createGroup(groupRequest).map(GroupResponse::new);
   }
 
   @GetMapping(path = "/{id}")
-  public Mono<GroupResponse> getUser(@PathVariable Integer id) {
+  public Mono<GroupResponse> getGroup(@PathVariable Integer id) {
     return groupService.getGroupById(id).map(GroupResponse::new);
+  }
+
+  @PatchMapping(path = "/{id}")
+  public Mono<GroupResponse> updateGroup(@PathVariable Integer id, @Valid @RequestBody GroupRequest groupRequest) {
+    return groupService.updateGroup(id, groupRequest).map(GroupResponse::new);
   }
 
   @DeleteMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public Mono<Void> deleteUser(@PathVariable Integer id) {
+  public Mono<Void> deleteGroup(@PathVariable Integer id) {
     return groupService.deleteGroup(id);
   }
 }

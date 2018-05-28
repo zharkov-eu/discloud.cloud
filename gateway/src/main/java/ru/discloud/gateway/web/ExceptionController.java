@@ -11,6 +11,7 @@ import ru.discloud.gateway.exception.EntityExistsException;
 import ru.discloud.gateway.exception.EntityNotFoundException;
 import ru.discloud.gateway.exception.ServiceResponseException;
 import ru.discloud.gateway.exception.ServiceUnavailableException;
+import ru.discloud.gateway.request.store.MasterNodeNotExistsException;
 import ru.discloud.shared.web.ErrorResponse;
 
 @Slf4j
@@ -26,9 +27,16 @@ public class ExceptionController {
 
   @ResponseStatus(HttpStatus.CONFLICT)
   @ExceptionHandler(EntityExistsException.class)
-  public ErrorResponse notFound(EntityExistsException exception) {
+  public ErrorResponse entityExists(EntityExistsException exception) {
     log.error("EntityExistsException: " + exception.getMessage());
     return new ErrorResponse(exception, HttpStatus.CONFLICT);
+  }
+
+  @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)
+  @ExceptionHandler(MasterNodeNotExistsException.class)
+  public ErrorResponse masterNodeNotFound(MasterNodeNotExistsException exception) {
+    log.error("MasterNodeNotExistsException: " + exception.getMessage());
+    return new ErrorResponse(exception, HttpStatus.GATEWAY_TIMEOUT);
   }
 
   @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)

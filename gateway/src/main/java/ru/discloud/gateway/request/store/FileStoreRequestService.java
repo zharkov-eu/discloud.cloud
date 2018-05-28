@@ -2,23 +2,23 @@ package ru.discloud.gateway.request.store;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.asynchttpclient.Response;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ru.discloud.gateway.GatewayApplication;
 import ru.discloud.gateway.request.service.AuthRequestService;
 import ru.discloud.gateway.request.service.ServiceEnum;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Log4j2
+@Slf4j
 @Service
 public class FileStoreRequestService {
   private final ObjectMapper mapper = new ObjectMapper();
@@ -27,9 +27,12 @@ public class FileStoreRequestService {
   private final AtomicBoolean fileNodesCheck = new AtomicBoolean(false);
 
   @Autowired
-  public FileStoreRequestService(AuthRequestService requestService) {
+  public FileStoreRequestService(AuthRequestService requestService) throws IOException {
     this.requestService = requestService;
-    this.fileNodes = new ArrayList<>();
+    this.fileNodes = mapper.readValue(
+        GatewayApplication.class.getClassLoader().getResourceAsStream("filenode.json"),
+        new TypeReference<List<FileNode>>() {}
+    );
   }
 
   public Mono<Response> request(String method, String url) {
@@ -50,6 +53,9 @@ public class FileStoreRequestService {
                                      Map<String, List<String>> queryParams, String body) {
     return Mono.fromCallable(this::getMasterFileNode)
         .switchIfEmpty(this.refreshFileNodes().map(target -> target))
+        .doOnSuccess((target) -> {
+          if (target == null) throw new MasterNodeNotExistsException();
+        })
         .flatMap(target -> Mono
             .fromFuture(requestService.request(ServiceEnum.FILE, method, target.getBaseUrl() + url, queryParams, body))
         );
@@ -69,7 +75,7 @@ public class FileStoreRequestService {
         return Flux.fromIterable(fileNodes)
             .flatMap(it -> Mono.fromFuture(
                 requestService.request(ServiceEnum.FILE, "GET", it.getBaseUrl() + "/node")
-                    .exceptionally(e -> null)
+                      .exceptionally(e -> null)
             ))
             .filter(response -> response != null && response.getStatusCode() == 200)
             .next()
