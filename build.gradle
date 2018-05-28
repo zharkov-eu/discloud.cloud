@@ -14,6 +14,11 @@ buildscript {
 }
 
 subprojects {
+    ext {
+        lombokVersion = '1.16.20'
+        jetbrainsAnnotationVesion = '16.0.2'
+    }
+
     apply plugin: 'java'
     apply plugin: 'idea'
 
@@ -21,7 +26,8 @@ subprojects {
     sourceCompatibility = 1.8
 
     dependencies {
-        compile 'org.jetbrains:annotations:16.0.2'
+        compileOnly("org.projectlombok:lombok:${lombokVersion}")
+        compileOnly("org.jetbrains:annotations:${jetbrainsAnnotationVesion}")
     }
 
     //noinspection GroovyAssignabilityCheck
@@ -62,8 +68,5 @@ project(':user') {
 project(':gateway') {
     dependencies {
         compile project(':shared')
-        compile project(':auth')
-        compile project(':statistics')
-        compile project(':user')
     }
 }

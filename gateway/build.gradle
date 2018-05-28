@@ -1,7 +1,6 @@
 ext {
     asyncHttpClientVersion = '2.4.7'
     springBootVersion = '2.0.2.RELEASE'
-    lombokVersion = '1.16.20'
 }
 
 repositories {
@@ -18,8 +17,6 @@ dependencies {
     compile("org.asynchttpclient:async-http-client:${asyncHttpClientVersion}")
     compile("org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
-
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 }

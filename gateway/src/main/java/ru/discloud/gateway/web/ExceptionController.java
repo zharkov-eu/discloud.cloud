@@ -7,12 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.discloud.gateway.exception.EntityExistsException;
+import ru.discloud.gateway.exception.EntityNotFoundException;
 import ru.discloud.gateway.exception.ServiceResponseException;
 import ru.discloud.gateway.exception.ServiceUnavailableException;
 import ru.discloud.shared.web.ErrorResponse;
-
-import javax.persistence.EntityNotFoundException;
-
 
 @Slf4j
 @RestControllerAdvice
@@ -21,8 +20,15 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(EntityNotFoundException.class)
   public ErrorResponse notFound(EntityNotFoundException exception) {
-    log.error("EntityExistsException: " + exception.getMessage());
+    log.error("EntityNotFoundException: " + exception.getMessage());
     return new ErrorResponse(exception, HttpStatus.NOT_FOUND);
+  }
+
+  @ResponseStatus(HttpStatus.CONFLICT)
+  @ExceptionHandler(EntityExistsException.class)
+  public ErrorResponse notFound(EntityExistsException exception) {
+    log.error("EntityExistsException: " + exception.getMessage());
+    return new ErrorResponse(exception, HttpStatus.CONFLICT);
   }
 
   @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)

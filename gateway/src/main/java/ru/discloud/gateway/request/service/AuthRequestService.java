@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import org.asynchttpclient.*;
 import org.springframework.stereotype.Component;
 import ru.discloud.gateway.config.EndpointConfig;
+import ru.discloud.gateway.exception.EntityExistsException;
+import ru.discloud.gateway.exception.EntityNotFoundException;
+import ru.discloud.gateway.exception.ServiceResponseException;
 import ru.discloud.gateway.exception.ServiceUnavailableException;
 
 import java.io.IOException;
@@ -30,6 +33,21 @@ public class AuthRequestService {
         .setConnectTimeout(DEFAULT_TIMEOUT);
     this.httpClient = Dsl.asyncHttpClient(clientBuilder);
     this.serviceTokens = new HashMap<>();
+  }
+
+  public static void checkServiceResponse(ServiceEnum service, Response response) {
+    switch (response.getStatusCode()) {
+      case 200:
+      case 201:
+      case 204:
+        break;
+      case 404:
+        throw new EntityNotFoundException(response.getResponseBody());
+      case 409:
+        throw new EntityExistsException(response.getResponseBody());
+      default:
+        throw new ServiceResponseException(service, response);
+    }
   }
 
   public CompletableFuture<Response> request(ServiceEnum service, String method, String url) {

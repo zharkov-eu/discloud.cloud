@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class FileNode {
+class FileNode {
   private String uid;
   private String ipv4;
   private String host;
@@ -13,4 +13,8 @@ public class FileNode {
   private Integer port;
   private FileNodeRoleEnum role;
   private String zone;
+
+  String getBaseUrl() {
+    return protocol + "://" + (host != null ? host : ipv4) + ":" + port;
+  }
 }

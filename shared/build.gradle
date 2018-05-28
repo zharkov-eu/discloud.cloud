@@ -1,6 +1,5 @@
 ext {
     jjwtVersion = '0.9.0'
-    lombokVersion = '1.16.20'
     springBootVersion = '2.0.2.RELEASE'
     hibernateValidatorVersion = '6.0.9.Final'
 }
@@ -14,6 +13,4 @@ dependencies {
     compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
-
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 }

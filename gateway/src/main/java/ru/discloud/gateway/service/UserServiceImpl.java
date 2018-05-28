@@ -15,8 +15,6 @@ import ru.discloud.gateway.request.store.FileStoreRequestService;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.util.*;
@@ -54,7 +52,7 @@ public class UserServiceImpl implements UserService {
   public Mono<User> getUserById(Long id) {
     return Mono
         .fromFuture(authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/" + id))
-        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response))
+        .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.USER, response))
         .map(this::mapResponseToUser);
   }
 
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     return Mono
         .fromFuture(authRequest.request(ServiceEnum.USER, "GET", "/api/user/user/by/", query))
-        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response))
+        .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.USER, response))
         .map(this::mapResponseToUser);
   }
 
@@ -83,14 +81,14 @@ public class UserServiceImpl implements UserService {
 //        .setUsername(userRequest.getEmail() != null ? userRequest.getEmail() : userRequest.getPhone())
 //        .setEmail(userRequest.getEmail())
 //        .setPhone(userRequest.getPhone())
-//        .setGroup(userRequest.getGroup())
+//        .setGroup(userRequest.getGroupById())
 //        .setPassword(userRequest.getPassword())
 //        .setPrivileges(UserPrivileges.USER)
 //        .setQuota(1024 * 1024L);
 //
 //    ru.discloud.shared.web.core.UserRequest coreUserRequest = new ru.discloud.shared.web.core.UserRequest()
 //        .setUsername(user.getUsername())
-//        .setGroup(user.getGroup())
+//        .setGroup(user.getGroupById())
 //        .setPassword(userRequest.getPassword());
 //
 //    User fileServiceUser = Mono
@@ -145,7 +143,7 @@ public class UserServiceImpl implements UserService {
   public Mono<Void> deleteUser(Long id) {
     return Mono
         .fromFuture(authRequest.request(ServiceEnum.USER, "DELETE", "/api/user/user/" + id))
-        .doOnSuccess(response -> checkServiceResponse(ServiceEnum.USER, response))
+        .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.USER, response))
         .then();
   }
 
@@ -154,21 +152,6 @@ public class UserServiceImpl implements UserService {
       return mapper.readValue(response.getResponseBody(), User.class);
     } catch (IOException ex) {
       throw new ServiceResponseParsingException(ex.getMessage());
-    }
-  }
-
-  private void checkServiceResponse(ServiceEnum service, Response response) {
-    switch (response.getStatusCode()) {
-      case 200:
-      case 201:
-      case 204:
-        break;
-      case 404:
-        throw new EntityNotFoundException();
-      case 409:
-        throw new EntityExistsException();
-      default:
-        throw new ServiceResponseException(ServiceEnum.USER, response);
     }
   }
 }
