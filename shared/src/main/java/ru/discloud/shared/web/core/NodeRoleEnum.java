@@ -1,14 +1,14 @@
-package ru.discloud.gateway.request.store;
+package ru.discloud.shared.web.core;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum FileNodeRoleEnum {
-  MASTER("m"),
-  SLAVE("s");
+public enum NodeRoleEnum {
+  MASTER("master"),
+  SLAVE("slave");
 
   private final String text;
 
-  FileNodeRoleEnum(final String text) {
+  NodeRoleEnum(final String text) {
     this.text = text;
   }
 

@@ -10,6 +10,8 @@ import ru.discloud.shared.web.core.GroupRequest;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/group")
@@ -24,6 +26,11 @@ public class GroupController {
   @PostMapping()
   public Mono<GroupResponse> createGroup(@Valid @RequestBody GroupRequest groupRequest) throws ValidationException {
     return groupService.createGroup(groupRequest).map(GroupResponse::new);
+  }
+
+  @GetMapping(path = "/")
+  public Mono<List<GroupResponse>> getGroups() {
+    return groupService.getGroups().map(groups -> groups.stream().map(GroupResponse::new).collect(Collectors.toList()));
   }
 
   @GetMapping(path = "/{id}")

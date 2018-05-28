@@ -94,7 +94,7 @@ public class AuthRequestService {
                 .thenApply(authResponse -> {
                   if (authResponse.getStatusCode() == 407) {
                     throw new ServiceCredentialsException(
-                        String.format("Service %s not found", service.toString()));
+                        String.format("Service %s bad credentials", service.toString()));
                   }
                   String tokenString = authResponse.getHeader("X-Auth-Token");
                   long tokenExpireInterval = Long.parseLong(authResponse.getHeader("X-Auth-Token"));
@@ -134,6 +134,7 @@ public class AuthRequestService {
         break;
       case FILE:
         credentials = fileService.getUser() + ":" + fileService.getPassword();
+        break;
       case STATISTICS:
         credentials = statisticsService.getUser() + ":" + statisticsService.getPassword();
         break;

@@ -1,5 +1,6 @@
 package ru.discloud.gateway.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.asynchttpclient.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import ru.discloud.gateway.request.store.FileStoreRequestService;
 import ru.discloud.shared.web.core.GroupRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -22,6 +24,13 @@ public class GroupServiceImpl implements GroupService {
   @Autowired
   public GroupServiceImpl(FileStoreRequestService fileStore) {
     this.fileStore = fileStore;
+  }
+
+  @Override
+  public Mono<List<Group>> getGroups() {
+    return fileStore.request("GET", "/group/")
+        .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.FILE, response))
+        .map(this::mapResponseToGroupList);
   }
 
   @Override
@@ -46,6 +55,14 @@ public class GroupServiceImpl implements GroupService {
     return fileStore.request("DELETE", "/group/" + id)
         .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.FILE, response))
         .then();
+  }
+
+  private List<Group> mapResponseToGroupList(Response response) {
+    try {
+      return mapper.readValue(response.getResponseBody(), new TypeReference<List<Group>>() {});
+    } catch (IOException ex) {
+      throw new ServiceResponseParsingException(ex.getMessage());
+    }
   }
 
   private Group mapResponseToGroup(Response response) {
