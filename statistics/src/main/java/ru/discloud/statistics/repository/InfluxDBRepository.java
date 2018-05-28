@@ -7,15 +7,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class InfluxDBRepository {
-    private final InfluxDBTemplate<Point> influxDBTemplate;
+  private final InfluxDBTemplate<Point> influxDBTemplate;
 
-    @Autowired
-    public InfluxDBRepository(InfluxDBTemplate<Point> influxDBTemplate) {
-        this.influxDBTemplate = influxDBTemplate;
-        this.influxDBTemplate.createDatabase();
-    }
+  @Autowired
+  public InfluxDBRepository(InfluxDBTemplate<Point> influxDBTemplate) {
+    this.influxDBTemplate = influxDBTemplate;
+    this.influxDBTemplate.createDatabase();
+  }
 
-    public void write(Point... point) {
-        influxDBTemplate.write(point);
-    }
+  public void write(Point... point) {
+    influxDBTemplate.write(point);
+  }
 }

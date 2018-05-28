@@ -35,8 +35,8 @@ public class ProxyAuthInterceptor extends HandlerInterceptorAdapter {
     String authorization = request.getHeader("Authorization");
     if (authorization != null && authorization.startsWith("Basic")) {
       authProvider.userByBasicAuthorization(authorization)
-          .ifPresent(client -> {
-            ProxyAuthToken token = authProvider.createAccessToken(client);
+          .ifPresent(user -> {
+            ProxyAuthToken token = authProvider.createAccessToken(user);
             response.setHeader("X-Auth-Token", token.getToken());
             response.setHeader("X-Auth-Expire", token.getExpire().toString());
           });

@@ -9,14 +9,14 @@ import ru.discloud.statistics.interceptor.TokenProxyAuthInterceptor;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final TokenProxyAuthInterceptor tokenAuthenticationInterceptor;
+  private final TokenProxyAuthInterceptor tokenAuthenticationInterceptor;
 
-    @Autowired
-    public WebMvcConfig(TokenProxyAuthInterceptor tokenAuthenticationInterceptor) {
-        this.tokenAuthenticationInterceptor = tokenAuthenticationInterceptor;
-    }
+  @Autowired
+  public WebMvcConfig(TokenProxyAuthInterceptor tokenAuthenticationInterceptor) {
+    this.tokenAuthenticationInterceptor = tokenAuthenticationInterceptor;
+  }
 
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenAuthenticationInterceptor);
-    }
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(tokenAuthenticationInterceptor);
+  }
 }
