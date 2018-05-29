@@ -8,4 +8,4 @@ services:
     ports:
       - 9020:9020
     container_name: discloud-statistics
-    mem_limit: 512
+    mem_limit: 512M
