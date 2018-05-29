@@ -1,5 +1,6 @@
 package ru.discloud.gateway.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,13 @@ public class ExceptionController {
   public ErrorResponse serviceUnavailable(ServiceUnavailableException exception) {
     log.error("ServiceUnavailableException: " + exception.getMessage());
     return new ErrorResponse(exception, HttpStatus.GATEWAY_TIMEOUT);
+  }
+
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ExceptionHandler(JsonProcessingException.class)
+  public ErrorResponse jsonProcessing(JsonProcessingException exception) {
+    log.error("JsonProcessingException: " + exception.getMessage());
+    return new ErrorResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler(ServiceResponseException.class)

@@ -2,12 +2,10 @@ package ru.discloud.gateway.web.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.discloud.gateway.domain.User;
 import ru.discloud.shared.UserPrivileges;
 
 @Data
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
   private Long id;

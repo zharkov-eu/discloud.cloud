@@ -1,5 +1,6 @@
 package ru.discloud.gateway.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,8 @@ public class GroupController {
   }
 
   @PostMapping()
-  public Mono<GroupResponse> createGroup(@Valid @RequestBody GroupRequest groupRequest) throws ValidationException {
+  public Mono<GroupResponse> createGroup(@Valid @RequestBody GroupRequest groupRequest)
+      throws ValidationException, JsonProcessingException {
     return groupService.createGroup(groupRequest).map(GroupResponse::new);
   }
 
@@ -39,7 +41,8 @@ public class GroupController {
   }
 
   @PatchMapping(path = "/{id}")
-  public Mono<GroupResponse> updateGroup(@PathVariable Integer id, @Valid @RequestBody GroupRequest groupRequest) {
+  public Mono<GroupResponse> updateGroup(@PathVariable Integer id, @Valid @RequestBody GroupRequest groupRequest)
+      throws ValidationException, JsonProcessingException {
     return groupService.updateGroup(id, groupRequest).map(GroupResponse::new);
   }
 
