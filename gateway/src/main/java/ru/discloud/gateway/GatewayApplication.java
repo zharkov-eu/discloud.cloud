@@ -8,12 +8,12 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = {
-        DataSourceAutoConfiguration.class
+    DataSourceAutoConfiguration.class
 })
-@EnableRedisRepositories(basePackages = {"ru.discloud.auth.repository.redis"})
+@EnableRedisRepositories(basePackages = {"ru.discloud.gateway.repository.redis"})
 public class GatewayApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(GatewayApplication.class, args);
+  }
 }

@@ -56,8 +56,8 @@ public class FileStoreRequestService {
   private Mono<Response> nodeRequest(String method, String url,
                                      Map<String, List<String>> queryParams, String body) {
     return Mono.fromCallable(this::getMasterFileNode)
-        .switchIfEmpty(this.refreshFileNodes(false).map(target -> target))
-        .doOnSuccess((target) -> {
+        .switchIfEmpty(this.refreshFileNodes(false))
+        .doOnSuccess(target -> {
           if (target == null) throw new MasterNodeNotExistsException();
         })
         .flatMap(target -> Mono
@@ -67,7 +67,8 @@ public class FileStoreRequestService {
                   else throw new RuntimeException(ex);
                 }))
         )
-        .switchIfEmpty(this.refreshFileNodes(true)
+        .switchIfEmpty(Mono.empty()
+            .flatMap(empty -> this.refreshFileNodes(true))
             .flatMap(target -> {
               if (target == null) throw new MasterNodeNotExistsException();
               else return Mono.fromFuture(

@@ -28,6 +28,13 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
+  public Mono<Group> createGroup(GroupRequest request) throws JsonProcessingException {
+    return fileStore.request("POST", "/group", null, mapper.writeValueAsString(request))
+        .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.FILE, response))
+        .map(this::mapResponseToGroup);
+  }
+
+  @Override
   public Mono<List<Group>> getGroups() {
     return fileStore.request("GET", "/group/")
         .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.FILE, response))
@@ -37,13 +44,6 @@ public class GroupServiceImpl implements GroupService {
   @Override
   public Mono<Group> getGroupById(Integer id) {
     return fileStore.request("GET", "/group/" + id)
-        .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.FILE, response))
-        .map(this::mapResponseToGroup);
-  }
-
-  @Override
-  public Mono<Group> createGroup(GroupRequest request) throws JsonProcessingException {
-    return fileStore.request("POST", "/group", null, mapper.writeValueAsString(request))
         .doOnSuccess(response -> AuthRequestService.checkServiceResponse(ServiceEnum.FILE, response))
         .map(this::mapResponseToGroup);
   }
