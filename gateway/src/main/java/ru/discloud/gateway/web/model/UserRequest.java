@@ -18,7 +18,7 @@ public class UserRequest {
   private String phone;
 
   @NotNull(message = "Group not provided")
-  private List<String> group;
+  private List<Integer> group;
 
   private String username;
 

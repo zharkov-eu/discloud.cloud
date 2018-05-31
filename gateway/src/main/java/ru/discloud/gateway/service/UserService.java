@@ -15,7 +15,7 @@ public interface UserService {
 
   Mono<User> getUserBy(String username, String email, String phone);
 
-  Mono<User> createUser(UserRequest userRequest) throws ValidationException;
+  Mono<User> createUser(UserRequest userRequest) throws ValidationException, JsonProcessingException;
 
   Mono<Void> deleteUser(Long id);
 }

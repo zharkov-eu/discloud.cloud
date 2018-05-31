@@ -16,7 +16,7 @@ public class UserRequest {
 
   @JsonProperty("group")
   @NotBlank(message = "Group not provided")
-  protected List<String> group;
+  protected List<Integer> group;
 
   @JsonProperty("password")
   @NotBlank(message = "Password not provided")

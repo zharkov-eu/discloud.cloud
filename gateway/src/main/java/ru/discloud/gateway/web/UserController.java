@@ -1,10 +1,10 @@
 package ru.discloud.gateway.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import ru.discloud.gateway.domain.User;
 import ru.discloud.gateway.service.UserService;
 import ru.discloud.gateway.web.model.UserPageResponse;
 import ru.discloud.gateway.web.model.UserRequest;
@@ -24,7 +24,8 @@ public class UserController {
   }
 
   @PostMapping()
-  public Mono<UserResponse> createUser(@Valid  @RequestBody UserRequest userRequest) throws ValidationException {
+  public Mono<UserResponse> createUser(@Valid  @RequestBody UserRequest userRequest)
+      throws ValidationException, JsonProcessingException {
     return userService.createUser(userRequest).map(UserResponse::new);
   }
 

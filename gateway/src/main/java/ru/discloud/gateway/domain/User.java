@@ -14,7 +14,7 @@ public class User {
   private Long id;
   private String username;
   private String email;
-  private List<String> group;
+  private List<Integer> group;
   private String phone;
   private String password;
   private UserPrivileges privileges;
